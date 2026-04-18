@@ -25,7 +25,7 @@
       <div class="brand-mark"><img src="${window.__resources && window.__resources.panther || 'assets/panther-mascot.png'}" alt="Mentone panther" /></div>
       <div class="brand-text">
         <div class="name">Mentone Hockey Club</div>
-        <div class="sub">Est. 1926 · Bayside</div>
+        <div class="sub">Est. 1976 · Bayside</div>
       </div>
     </a>`;
   }
@@ -98,7 +98,7 @@
         <div>© 2026 Mentone Hockey Club. Proudly affiliated with Hockey Victoria.</div>
         <div class="foot-social">
           <a href="#" aria-label="Facebook"><svg viewBox="0 0 14 14" fill="currentColor"><path d="M8.5 14V7.5h2l.3-2.3H8.5V3.7c0-.7.2-1.1 1.1-1.1H11V.6C10.5.5 9.8.5 9.1.5 7.5.5 6.4 1.4 6.4 3.3v1.9H4.5v2.3h1.9V14h2.1z"/></svg></a>
-          <a href="#" aria-label="Instagram"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1.5" y="1.5" width="11" height="11" rx="3"/><circle cx="7" cy="7" r="2.5"/><circle cx="10.5" cy="3.5" r="0.5" fill="currentColor"/></svg></a>
+          <a href="https://www.instagram.com/mentone_hc/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1.5" y="1.5" width="11" height="11" rx="3"/><circle cx="7" cy="7" r="2.5"/><circle cx="10.5" cy="3.5" r="0.5" fill="currentColor"/></svg></a>
         </div>
       </div>
     </div></footer>`;
