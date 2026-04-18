@@ -1183,8 +1183,8 @@ body[data-hero="poster"] .hero-copy { max-width: 900px; }
   .week-grid { grid-template-columns: 1fr; }
   .sponsors-grid { grid-template-columns: repeat(3, 1fr); }
   .foot-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
-  .hero-mascot-pin.tl { left: 0; }
-  .hero-mascot-pin.br { right: 0; }
+  .hero-mascot-pin.tl { display: none; }
+  .hero-mascot-pin.br { display: none; }
   body[data-hero="poster"] .hero-mascot-stage { position: relative; right: auto; bottom: auto; width: 220px; margin: 0 auto; }
 
   /* contact-cards-grid: 2-col at tablet, drops to 1 at small */
@@ -1202,10 +1202,10 @@ body[data-hero="poster"] .hero-copy { max-width: 900px; }
   .page-section-split--center { gap: 28px; }
   .page-section-split--gap-sm { gap: 20px; }
 
-  /* hero text sizing */
+  .hero-mascot-stage { display: none; }
+  .hero-grid { grid-template-columns: 1fr; }
   .hero h1 { font-size: clamp(36px, 9vw, 64px); }
   .hero p.lead { font-size: 16px; }
-  .hero-mascot-stage { max-width: 360px; margin: 0 auto; }
 
   /* stats strip: tighter on tablet */
   .stat-num { font-size: 36px; }
