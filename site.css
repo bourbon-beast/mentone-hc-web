@@ -235,32 +235,7 @@ body.nav-open { overflow: hidden; }
   margin-top: 48px;
 }
 
-@media (max-width: 960px) {
-  .page-section-split,
-  .page-section-split--center {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-  .page-section-split--gap-sm { gap: 28px; }
-  .comp-grid-3 { grid-template-columns: 1fr; }
-  .contact-cards-grid { grid-template-columns: 1fr; }
-  .contact-split { grid-template-columns: 1fr; gap: 32px; }
-  .faq-grid { grid-template-columns: 1fr; }
-  .steps-grid-3 { grid-template-columns: 1fr; }
-  .section-pick-grid { grid-template-columns: repeat(2, 1fr); }
-  .age-grid-4 { grid-template-columns: repeat(2, 1fr); }
-  .instagram-grid { grid-template-columns: repeat(3, 1fr); }
-}
 
-@media (max-width: 640px) {
-  .off-field-mini-grid { grid-template-columns: 1fr; }
-  .section-pick-grid { grid-template-columns: 1fr; }
-  .age-grid-4 { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 560px) {
-  .instagram-grid { grid-template-columns: repeat(2, 1fr); }
-}
 
 /* ============ BUTTONS ============ */
 .btn {
