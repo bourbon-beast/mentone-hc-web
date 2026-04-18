@@ -23,9 +23,8 @@
   }
 
   function brand(isFooter) {
-    const logo = (window.__resources && window.__resources.logo) || 'assets/club-logo.png';
     return `<a href="index.html" class="brand">
-      <div class="brand-mark" aria-hidden="true"><img src="${logo}" alt="" /></div>
+      <div class="brand-mark" aria-hidden="true"><img src="assets/club-logo.png" alt="" /></div>
       <div class="brand-text">
         <div class="name">Mentone Hockey Club</div>
         <div class="sub">Est. 1976 · Bayside</div>
@@ -38,13 +37,50 @@
       const cls = (href === here || active === href) ? ' class="active"' : '';
       return `<li><a href="${href}"${cls}>${label}</a></li>`;
     }).join('');
-    return `<nav class="nav"><div class="wrap nav-inner">
+    return `<nav class="nav" aria-label="Main"><div class="wrap nav-inner">
       ${brand()}
-      <ul class="nav-links">${links}</ul>
-      <a href="${CLUB_REGISTRATIONS_URL}" target="_blank" rel="noopener noreferrer" class="nav-cta">Register
-        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h8M7 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
+      <ul class="nav-links" id="primary-nav">${links}</ul>
+      <div class="nav-trail">
+        <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu">
+          <svg class="nav-toggle-icon nav-icon-menu" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg class="nav-toggle-icon nav-icon-close" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <a href="${CLUB_REGISTRATIONS_URL}" target="_blank" rel="noopener noreferrer" class="nav-cta">Register
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h8M7 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
     </div></nav>`;
+  }
+
+  function mountNavInteraction() {
+    const nav = document.querySelector('.nav');
+    const btn = document.querySelector('.nav-toggle');
+    const links = document.getElementById('primary-nav');
+    if (!nav || !btn || !links) return;
+
+    function setOpen(open) {
+      nav.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      document.body.classList.toggle('nav-open', open);
+    }
+
+    btn.addEventListener('click', () => setOpen(!nav.classList.contains('is-open')));
+    links.querySelectorAll('a').forEach((a) => {
+      a.addEventListener('click', () => setOpen(false));
+    });
+    const cta = nav.querySelector('.nav-cta');
+    if (cta) cta.addEventListener('click', () => setOpen(false));
+    document.addEventListener('click', (e) => {
+      if (!nav.classList.contains('is-open')) return;
+      if (!nav.contains(e.target)) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && nav.classList.contains('is-open')) {
+        setOpen(false);
+        btn.focus();
+      }
+    });
   }
 
   function injectCTA() {
@@ -113,6 +149,7 @@
     if (anc) anc.outerHTML = injectAnnounce();
     const nav = document.getElementById('site-nav');
     if (nav) nav.outerHTML = injectNav();
+    mountNavInteraction();
     const cta = document.getElementById('site-cta');
     if (cta) cta.outerHTML = injectCTA();
     const foot = document.getElementById('site-footer');
@@ -192,3 +229,4 @@
     mount(); mountTweaks(); window.parent.postMessage({type:'__edit_mode_available'}, '*');
   }
 })();
+
