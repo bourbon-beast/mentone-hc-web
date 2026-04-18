@@ -184,6 +184,29 @@
     font-size: 14px;
     color: var(--navy);
   }
+
+  /* ── Mobile responsive ── */
+  @media (max-width: 768px) {
+    .fix-tabs { padding: 0 18px; top: 56px; }
+    .fix-tab { padding: 14px 16px; font-size: 12px; }
+    .fix-section { padding: 36px 0; }
+    .grade-label { font-size: 18px; }
+
+    /* Wrap table in scroll container */
+    .grade-block { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .fixture-table { font-size: 13px; min-width: 480px; }
+    .fixture-table td { padding: 12px 10px; }
+    .fixture-table thead th { padding: 0 10px 8px; }
+
+    /* Hide day column on mobile — date is enough */
+    .fix-day-cell { display: none; }
+    .fixture-table thead th:first-child { display: none; }
+  }
+
+  @media (max-width: 480px) {
+    .fixture-table { min-width: 380px; font-size: 12px; }
+    .fix-venue { font-size: 11px; padding: 2px 6px; }
+  }
 </style>
 </head>
 <body>
