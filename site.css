@@ -1205,6 +1205,7 @@ body[data-hero="poster"] .hero-copy { max-width: 900px; }
   .hero-stats, .stat-strip { grid-template-columns: repeat(2, 1fr); gap: 24px; }
   .stat { border-right: none; padding: 0; }
   .sections-grid, .news-grid, .week-grid { grid-template-columns: 1fr 1fr; }
+  .week-grid { grid-template-columns: 1fr; }
   .sponsors-grid { grid-template-columns: repeat(3, 1fr); }
   .foot-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
   .hero-mascot-pin.tl { left: 0; }
