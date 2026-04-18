@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fixtures — Mentone Hockey Club</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<link rel="stylesheet" href="site.css">
+<style>
+  /* ── Fixtures page styles ── */
+  .fix-page-hero {
+    background: var(--navy);
+    padding: 72px 0 52px;
+    position: relative;
+    overflow: hidden;
+  }
+  .fix-page-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(90deg, rgba(255,255,255,.015) 0, rgba(255,255,255,.015) 1px, transparent 1px, transparent 120px);
+    pointer-events: none;
+  }
+
+  /* ── Section tabs ── */
+  .fix-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--navy);
+    padding: 0 28px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    position: sticky;
+    top: 64px;
+    z-index: 90;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .fix-tabs::-webkit-scrollbar { display: none; }
+  .fix-tab {
+    padding: 16px 22px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: rgba(246,241,230,.45);
+    border: none;
+    background: none;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color .2s, border-color .2s;
+    font-family: var(--body);
+  }
+  .fix-tab:hover { color: rgba(246,241,230,.8); }
+  .fix-tab.active { color: var(--yellow); border-bottom-color: var(--yellow); }
+
+  /* ── Section panels ── */
+  .fix-section { display: none; padding: 56px 0; }
+  .fix-section.active { display: block; }
+
+  /* ── Grade block ── */
+  .grade-block { margin-bottom: 48px; }
+  .grade-block:last-child { margin-bottom: 0; }
+  .grade-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .grade-label {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--navy);
+  }
+  .grade-tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    background: var(--navy);
+    color: var(--yellow);
+    padding: 3px 10px;
+    border-radius: 3px;
+  }
+  .grade-tag.blue { background: var(--blue-wash); color: var(--navy); }
+
+  /* ── Fixture rows ── */
+  .fixture-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+  .fixture-table thead th {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 16px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+  }
+  .fixture-table thead th:last-child { text-align: right; }
+  .fixture-table tbody tr {
+    border-bottom: 1px solid var(--line-light);
+    transition: background .15s;
+  }
+  .fixture-table tbody tr:hover { background: rgba(4,28,44,.03); }
+  .fixture-table tbody tr:last-child { border-bottom: none; }
+  .fixture-table td {
+    padding: 14px 16px;
+    vertical-align: middle;
+  }
+  .fix-day-cell {
+    font-family: var(--body);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+    width: 48px;
+  }
+  .fix-date-cell {
+    color: var(--muted);
+    font-size: 14px;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .fix-time-cell {
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .fix-opponent {
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .fix-venue {
+    font-size: 13px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    white-space: nowrap;
+  }
+  .fix-venue.home { background: rgba(241,180,52,.15); color: var(--yellow-deep); }
+  .fix-venue.away { background: var(--blue-wash); color: var(--navy); }
+  .fix-result {
+    text-align: right;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .fix-result.win { color: #2d8a4e; }
+  .fix-result.loss { color: #c0392b; }
+  .fix-result.draw { color: var(--muted); }
+  .fix-result.tbd { color: var(--muted); font-weight: 400; font-size: 13px; }
+
+  /* ── Updated timestamp ── */
+  .fix-updated {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line-light);
+  }
+
+  /* ── Loading state ── */
+  .fix-loading {
+    text-align: center;
+    padding: 80px 0;
+    color: var(--muted);
+  }
+  .fix-error {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin: 32px 0;
+    font-size: 14px;
+    color: var(--navy);
+  }
+</style>
+</head>
+<body>
+<div id="site-announce"></div>
+<div id="site-nav"></div>
+
+<!-- PAGE HERO -->
+<section class="fix-page-hero">
+  <div class="wrap">
+    <div class="eyebrow" style="color:var(--yellow);margin-bottom:16px;">2026 Season</div>
+    <h1 style="color:var(--cream);max-width:600px;">Fixtures &amp; <em>results.</em></h1>
+    <p class="lead" style="color:rgba(246,241,230,0.7);max-width:520px;margin-top:16px;">Upcoming matches across all sections. Updated weekly.</p>
+  </div>
+</section>
+
+<!-- SECTION TABS — injected by JS -->
+<div class="fix-tabs" id="fix-tabs"></div>
+
+<!-- FIXTURE CONTENT — injected by JS -->
+<div class="section" style="padding-top:0;">
+  <div class="wrap">
+    <div id="fix-content">
+      <div class="fix-loading">Loading fixtures…</div>
+    </div>
+  </div>
+</div>
+
+<div id="site-cta"></div>
+<div id="site-footer"></div>
+<script src="partials.js"></script>
+<script>
+(function() {
+
+  function formatDate(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+  }
+
+  function venueTag(venue) {
+    const cls = venue.toLowerCase() === 'home' ? 'home' : 'away';
+    return `<span class="fix-venue ${cls}">${venue}</span>`;
+  }
+
+  function resultCell(result) {
+    if (!result) return `<span class="fix-result tbd">TBC</span>`;
+    const parts = result.split('-').map(Number);
+    if (parts[0] > parts[1]) return `<span class="fix-result win">${result}</span>`;
+    if (parts[0] < parts[1]) return `<span class="fix-result loss">${result}</span>`;
+    return `<span class="fix-result draw">${result}</span>`;
+  }
+
+  function renderGrade(grade, accentClass) {
+    const rows = grade.fixtures.map(f => `
+      <tr>
+        <td class="fix-day-cell">${f.day}</td>
+        <td class="fix-date-cell">${formatDate(f.date)}</td>
+        <td class="fix-time-cell">${f.time}</td>
+        <td class="fix-opponent">${f.opponent}</td>
+        <td>${venueTag(f.venue)}</td>
+        <td>${resultCell(f.result)}</td>
+      </tr>`).join('');
+
+    return `
+      <div class="grade-block">
+        <div class="grade-header">
+          <div class="grade-label">${grade.grade}</div>
+          <span class="grade-tag ${accentClass === 'blue' ? 'blue' : ''}">
+            ${grade.fixtures.length} fixture${grade.fixtures.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+        <table class="fixture-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Opponent</th>
+              <th>Venue</th>
+              <th style="text-align:right;">Result</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  }
+
+  function renderSection(section) {
+    const grades = section.grades.map(g => renderGrade(g, section.color)).join('');
+    return `<div class="fix-section" id="fix-${section.id}">${grades}</div>`;
+  }
+
+  function buildTabs(sections) {
+    const tabsEl = document.getElementById('fix-tabs');
+    tabsEl.innerHTML = sections.map((s, i) =>
+      `<button class="fix-tab${i === 0 ? ' active' : ''}" data-target="fix-${s.id}">${s.label}</button>`
+    ).join('');
+
+    tabsEl.querySelectorAll('.fix-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabsEl.querySelectorAll('.fix-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.fix-section').forEach(s => s.classList.remove('active'));
+        document.getElementById(btn.dataset.target).classList.add('active');
+      });
+    });
+  }
+
+  function render(data) {
+    const contentEl = document.getElementById('fix-content');
+    contentEl.innerHTML = data.sections.map(renderSection).join('') +
+      `<div class="fix-updated">Fixtures last updated: ${data.updated} · Source: Hockey Victoria</div>`;
+
+    // Activate first tab
+    const first = contentEl.querySelector('.fix-section');
+    if (first) first.classList.add('active');
+
+    buildTabs(data.sections);
+  }
+
+  // Fetch fixtures.json
+  fetch('fixtures.json')
+    .then(r => {
+      if (!r.ok) throw new Error('Could not load fixtures');
+      return r.json();
+    })
+    .then(render)
+    .catch(err => {
+      document.getElementById('fix-content').innerHTML =
+        `<div class="fix-error">Fixtures are unavailable right now — please check back soon.<br/><small>${err.message}</small></div>`;
+    });
+})();
+</script>
+</body>
+</html>

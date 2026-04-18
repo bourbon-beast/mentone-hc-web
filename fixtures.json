@@ -1,0 +1,181 @@
+{
+  "updated": "2026-04-18",
+  "sections": [
+    {
+      "id": "mens",
+      "label": "Men's",
+      "color": "yellow",
+      "grades": [
+        {
+          "grade": "Premier League",
+          "fixtures": [
+            { "date": "2026-04-26", "day": "Sat", "time": "3:00pm", "opponent": "Waverley HC", "venue": "Home", "result": null },
+            { "date": "2026-05-03", "day": "Sat", "time": "3:00pm", "opponent": "Hawthorn HC", "venue": "Away", "result": null },
+            { "date": "2026-05-10", "day": "Sat", "time": "1:30pm", "opponent": "Melbourne HC", "venue": "Home", "result": null },
+            { "date": "2026-05-17", "day": "Sat", "time": "3:00pm", "opponent": "Monash Uni", "venue": "Away", "result": null }
+          ]
+        },
+        {
+          "grade": "PLR",
+          "fixtures": [
+            { "date": "2026-04-26", "day": "Sat", "time": "1:30pm", "opponent": "Hawthorn HC", "venue": "Home", "result": null },
+            { "date": "2026-05-03", "day": "Sat", "time": "1:30pm", "opponent": "Knox HC", "venue": "Away", "result": null },
+            { "date": "2026-05-10", "day": "Sat", "time": "3:00pm", "opponent": "Doncaster HC", "venue": "Home", "result": null }
+          ]
+        },
+        {
+          "grade": "Pennant B",
+          "fixtures": [
+            { "date": "2026-04-26", "day": "Sat", "time": "11:00am", "opponent": "Camberwell HC", "venue": "Away", "result": null },
+            { "date": "2026-05-03", "day": "Sat", "time": "11:00am", "opponent": "St Kilda HC", "venue": "Home", "result": null },
+            { "date": "2026-05-10", "day": "Sat", "time": "11:00am", "opponent": "Footscray HC", "venue": "Away", "result": null }
+          ]
+        },
+        {
+          "grade": "Pennant C",
+          "fixtures": [
+            { "date": "2026-04-27", "day": "Sun", "time": "9:30am", "opponent": "Knox HC", "venue": "Home", "result": null },
+            { "date": "2026-05-04", "day": "Sun", "time": "9:30am", "opponent": "Waverley HC", "venue": "Away", "result": null },
+            { "date": "2026-05-11", "day": "Sun", "time": "9:30am", "opponent": "Doncaster HC", "venue": "Home", "result": null }
+          ]
+        },
+        {
+          "grade": "Pennant E",
+          "fixtures": [
+            { "date": "2026-04-27", "day": "Sun", "time": "11:00am", "opponent": "Ringwood HC", "venue": "Away", "result": null },
+            { "date": "2026-05-04", "day": "Sun", "time": "11:00am", "opponent": "Camberwell HC", "venue": "Home", "result": null }
+          ]
+        },
+        {
+          "grade": "Metro",
+          "fixtures": [
+            { "date": "2026-04-27", "day": "Sun", "time": "1:30pm", "opponent": "St Kilda HC", "venue": "Home", "result": null },
+            { "date": "2026-05-04", "day": "Sun", "time": "1:30pm", "opponent": "Footscray HC", "venue": "Away", "result": null },
+            { "date": "2026-05-11", "day": "Sun", "time": "1:30pm", "opponent": "Knox HC", "venue": "Home", "result": null }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "womens",
+      "label": "Women's",
+      "color": "blue",
+      "grades": [
+        {
+          "grade": "Premier League",
+          "fixtures": [
+            { "date": "2026-04-26", "day": "Sat", "time": "5:00pm", "opponent": "Hawthorn HC", "venue": "Away", "result": null },
+            { "date": "2026-05-03", "day": "Sat", "time": "5:00pm", "opponent": "Waverley HC", "venue": "Home", "result": null },
+            { "date": "2026-05-10", "day": "Sat", "time": "3:30pm", "opponent": "Melbourne HC", "venue": "Away", "result": null }
+          ]
+        },
+        {
+          "grade": "PLR",
+          "fixtures": [
+            { "date": "2026-04-26", "day": "Sat", "time": "3:30pm", "opponent": "Knox HC", "venue": "Home", "result": null },
+            { "date": "2026-05-03", "day": "Sat", "time": "3:30pm", "opponent": "Doncaster HC", "venue": "Away", "result": null }
+          ]
+        },
+        {
+          "grade": "Pennant A",
+          "fixtures": [
+            { "date": "2026-04-26", "day": "Sat", "time": "1:30pm", "opponent": "Camberwell HC", "venue": "Home", "result": null },
+            { "date": "2026-05-03", "day": "Sat", "time": "1:30pm", "opponent": "St Kilda HC", "venue": "Away", "result": null },
+            { "date": "2026-05-10", "day": "Sat", "time": "1:30pm", "opponent": "Ringwood HC", "venue": "Home", "result": null }
+          ]
+        },
+        {
+          "grade": "Pennant B",
+          "fixtures": [
+            { "date": "2026-04-26", "day": "Sat", "time": "11:00am", "opponent": "Footscray HC", "venue": "Away", "result": null },
+            { "date": "2026-05-03", "day": "Sat", "time": "11:00am", "opponent": "Waverley HC", "venue": "Home", "result": null }
+          ]
+        },
+        {
+          "grade": "Pennant D",
+          "fixtures": [
+            { "date": "2026-04-27", "day": "Sun", "time": "9:30am", "opponent": "Knox HC", "venue": "Home", "result": null },
+            { "date": "2026-05-04", "day": "Sun", "time": "9:30am", "opponent": "Hawthorn HC", "venue": "Away", "result": null }
+          ]
+        },
+        {
+          "grade": "Metro",
+          "fixtures": [
+            { "date": "2026-04-27", "day": "Sun", "time": "11:00am", "opponent": "Doncaster HC", "venue": "Away", "result": null },
+            { "date": "2026-05-04", "day": "Sun", "time": "11:00am", "opponent": "Camberwell HC", "venue": "Home", "result": null }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "juniors",
+      "label": "Juniors",
+      "color": "yellow",
+      "grades": [
+        {
+          "grade": "U18 Boys",
+          "fixtures": [
+            { "date": "2026-04-26", "day": "Sat", "time": "9:30am", "opponent": "Doncaster HC", "venue": "Home", "result": null },
+            { "date": "2026-05-03", "day": "Sat", "time": "9:30am", "opponent": "Knox HC", "venue": "Away", "result": null }
+          ]
+        },
+        {
+          "grade": "U16 Boys",
+          "fixtures": [
+            { "date": "2026-04-26", "day": "Sat", "time": "8:00am", "opponent": "Hawthorn HC", "venue": "Away", "result": null },
+            { "date": "2026-05-03", "day": "Sat", "time": "8:00am", "opponent": "Waverley HC", "venue": "Home", "result": null }
+          ]
+        },
+        {
+          "grade": "U14 Boys",
+          "fixtures": [
+            { "date": "2026-04-27", "day": "Sun", "time": "9:30am", "opponent": "Doncaster HC", "venue": "Home", "result": null },
+            { "date": "2026-05-04", "day": "Sun", "time": "9:30am", "opponent": "St Kilda HC", "venue": "Away", "result": null }
+          ]
+        },
+        {
+          "grade": "U12 Mixed",
+          "fixtures": [
+            { "date": "2026-04-27", "day": "Sun", "time": "8:00am", "opponent": "Knox HC", "venue": "Home", "result": null },
+            { "date": "2026-05-04", "day": "Sun", "time": "8:00am", "opponent": "Camberwell HC", "venue": "Away", "result": null }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "masters",
+      "label": "Masters",
+      "color": "blue",
+      "grades": [
+        {
+          "grade": "Men's O40B",
+          "fixtures": [
+            { "date": "2026-04-27", "day": "Sun", "time": "11:00am", "opponent": "Camberwell HC", "venue": "Away", "result": null },
+            { "date": "2026-05-04", "day": "Sun", "time": "11:00am", "opponent": "Waverley HC", "venue": "Home", "result": null }
+          ]
+        },
+        {
+          "grade": "Men's O40C",
+          "fixtures": [
+            { "date": "2026-04-27", "day": "Sun", "time": "1:00pm", "opponent": "Knox HC", "venue": "Home", "result": null },
+            { "date": "2026-05-04", "day": "Sun", "time": "1:00pm", "opponent": "Doncaster HC", "venue": "Away", "result": null }
+          ]
+        },
+        {
+          "grade": "Men's O50",
+          "fixtures": [
+            { "date": "2026-04-27", "day": "Sun", "time": "3:00pm", "opponent": "Hawthorn HC", "venue": "Away", "result": null },
+            { "date": "2026-05-04", "day": "Sun", "time": "3:00pm", "opponent": "St Kilda HC", "venue": "Home", "result": null }
+          ]
+        },
+        {
+          "grade": "Women's O45",
+          "fixtures": [
+            { "date": "2026-04-27", "day": "Sun", "time": "9:00am", "opponent": "Camberwell HC", "venue": "Home", "result": null },
+            { "date": "2026-05-04", "day": "Sun", "time": "9:00am", "opponent": "Knox HC", "venue": "Away", "result": null }
+          ]
+        }
+      ]
+    }
+  ]
+}
