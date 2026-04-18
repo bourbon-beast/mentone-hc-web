@@ -1,0 +1,168 @@
+/* ==========================================================================
+   MENTONE HOCKEY CLUB — Foundations
+   Typography + Color tokens
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ---------- Brand palette ---------- */
+  --navy: #041C2C;          /* Primary brand navy */
+  --navy-soft: #0d3048;     /* Hover / elevated navy */
+  --navy-deep: #02121c;     /* Deepest navy — announce bar */
+
+  --blue: #7DA1C4;          /* Powder blue — secondary */
+  --blue-soft: #b3c7db;
+  --blue-wash: #e6eef6;     /* Pale blue section bg */
+
+  --yellow: #F1B434;        /* Brand yellow — accent */
+  --yellow-bright: #f5c966; /* Hover on yellow */
+  --yellow-deep: #c89120;   /* Eyebrow / link underline */
+
+  /* ---------- Neutrals ---------- */
+  --cream: #f6f1e6;         /* Default page background */
+  --cream-warm: #efe5cf;
+  --off-white: #fafaf7;
+  --ink: #041C2C;           /* Body text */
+  --muted: #5a6b7a;         /* Secondary text */
+  --line: rgba(4, 28, 44, 0.12);
+  --line-light: rgba(4, 28, 44, 0.08);
+
+  /* ---------- Semantic foreground/background ---------- */
+  --fg-1: var(--ink);
+  --fg-2: var(--muted);
+  --fg-inverse: var(--cream);
+  --fg-accent: var(--yellow-deep);
+  --bg-1: var(--cream);
+  --bg-2: var(--blue-wash);
+  --bg-inverse: var(--navy);
+  --bg-surface: #ffffff;
+
+  /* ---------- Shadows ---------- */
+  --shadow-sm: 0 1px 2px rgba(4, 28, 44, 0.08);
+  --shadow-md: 0 8px 24px rgba(4, 28, 44, 0.12);
+  --shadow-lg: 0 24px 60px rgba(4, 28, 44, 0.18);
+
+  /* ---------- Radii ---------- */
+  --radius-sm: 3px;
+  --radius-md: 4px;         /* default — cards, buttons */
+  --radius-pill: 100px;
+  --radius-circle: 50%;
+
+  /* ---------- Spacing ---------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 14px;
+  --space-4: 20px;
+  --space-5: 28px;
+  --space-6: 40px;
+  --space-7: 56px;
+  --space-8: 80px;
+  --space-9: 110px;         /* Section padding */
+
+  /* ---------- Type families ---------- */
+  --display: 'Fraunces', Georgia, serif;
+  --body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* ---------- Layout ---------- */
+  --wrap: 1240px;
+}
+
+/* ==========================================================================
+   BASE TYPOGRAPHY
+   ========================================================================== */
+
+body {
+  font-family: var(--body);
+  color: var(--fg-1);
+  background: var(--bg-1);
+  line-height: 1.5;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Display headings — Fraunces, light weight, italic accent on emphasis */
+h1, .h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(42px, 6vw, 78px);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--navy);
+}
+h1 em, .h1 em { font-style: italic; font-weight: 300; color: var(--yellow-deep); }
+
+h2, .h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--navy);
+}
+h2 em, .h2 em { font-style: italic; font-weight: 300; color: var(--yellow-deep); }
+
+h3, .h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--navy);
+}
+
+h4, .h4 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--navy);
+}
+
+h5, .h5 {
+  font-family: var(--display);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--yellow-bright);
+}
+
+p, .body {
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--fg-1);
+}
+
+.lead {
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--fg-2);
+}
+
+.eyebrow {
+  display: inline-block;
+  font-family: var(--body);
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--yellow-deep);
+  font-weight: 600;
+}
+
+.label-micro {
+  font-family: var(--body);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+small, .small {
+  font-size: 13px;
+  color: var(--fg-2);
+}
+
+.tabular { font-variant-numeric: tabular-nums; }
