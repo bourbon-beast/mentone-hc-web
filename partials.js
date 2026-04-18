@@ -24,7 +24,7 @@
 
   function brand(isFooter) {
     return `<a href="index.html" class="brand">
-      <div class="brand-mark"><img src="assets/panther-mascot.png" alt="Mentone panther" /></div>
+      <div class="brand-mark" aria-hidden="true"><img src="assets/club-logo.png" alt="" /></div>
       <div class="brand-text">
         <div class="name">Mentone Hockey Club</div>
         <div class="sub">Est. 1976 · Bayside</div>

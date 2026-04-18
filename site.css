@@ -62,26 +62,20 @@ body {
   flex-shrink: 0;
 }
 .brand-mark {
-  width: 46px;
-  height: 46px;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  background: var(--navy);
-  color: var(--yellow);
-  display: grid;
-  place-items: center;
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 22px;
-  border: 2px solid var(--yellow);
   overflow: hidden;
   position: relative;
+  background: var(--navy);
+  border: 2px solid var(--yellow);
 }
 .brand-mark img {
-  width: 110%;
-  height: 110%;
-  object-fit: cover;
-  position: absolute;
-  inset: -5%;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
 }
 .brand-text { line-height: 1.1; }
 .brand-text .name {
@@ -1057,5 +1051,7 @@ body[data-hero="poster"] .hero-copy { max-width: 900px; }
   .section { padding: 72px 0; }
   .sponsors-grid { grid-template-columns: repeat(2, 1fr); }
   .foot-grid { grid-template-columns: 1fr; }
+  .brand-mark { width: 44px; height: 44px; }
+  .brand-text .name { font-size: 16px; }
 }
 
