@@ -13,10 +13,12 @@
     ['contact.html', 'Contact'],
   ];
 
+  const CLUB_REGISTRATIONS_URL = 'https://www.revolutionise.com.au/mentonehockey/club-registrations';
+
   function injectAnnounce() {
     return `<div class="announce">
       <strong>2026 Season</strong> registrations are now open
-      <a href="register.html">Register now →</a>
+      <a href="${CLUB_REGISTRATIONS_URL}" target="_blank" rel="noopener noreferrer">Register now →</a>
     </div>`;
   }
 
@@ -38,7 +40,7 @@
     return `<nav class="nav"><div class="wrap nav-inner">
       ${brand()}
       <ul class="nav-links">${links}</ul>
-      <a href="register.html" class="nav-cta">Register
+      <a href="${CLUB_REGISTRATIONS_URL}" target="_blank" rel="noopener noreferrer" class="nav-cta">Register
         <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h8M7 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div></nav>`;
@@ -49,7 +51,7 @@
       <div class="wrap"><div class="cta-band-inner">
         <h3>Ready to grab a stick? <em>Come down</em> — or register online for 2026.</h3>
         <div style="display:flex; gap:14px; flex-wrap:wrap;">
-          <a href="register.html" class="btn btn-primary">Register for 2026</a>
+          <a href="${CLUB_REGISTRATIONS_URL}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Register for 2026</a>
           <a href="contact.html" class="btn btn-ghost">Contact the club</a>
         </div>
       </div></div>
@@ -79,7 +81,7 @@
             <li><a href="fixtures.html">Fixtures &amp; Results</a></li>
             <li><a href="news.html">News</a></li>
             <li><a href="sponsors.html">Sponsors</a></li>
-            <li><a href="register.html">Registration</a></li>
+            <li><a href="${CLUB_REGISTRATIONS_URL}" target="_blank" rel="noopener noreferrer">Registration</a></li>
           </ul>
         </div>
         <div class="foot-col">
