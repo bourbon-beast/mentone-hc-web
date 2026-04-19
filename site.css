@@ -608,13 +608,7 @@ body.nav-open { overflow: hidden; }
   background: radial-gradient(circle, rgba(255,255,255,.2), transparent 60%);
 }
 .hook-visual::after {
-  content: '';
-  position: absolute;
-  bottom: -10%; left: -5%;
-  width: 55%; aspect-ratio: 1/1;
-  background: url('assets/panther-mascot.png') center/contain no-repeat;
-  opacity: .18;
-  mix-blend-mode: multiply;
+  display: none;
 }
 .hook-badge {
   position: relative;
