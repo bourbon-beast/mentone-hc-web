@@ -768,7 +768,7 @@ body.nav-open { overflow: hidden; }
 
 /* ============ CTA BAND ============ */
 .cta-band {
-  background: var(--navy-deep);
+  background: var(--navy-soft);
   color: var(--cream);
   padding: 88px 0;
   position: relative;
@@ -804,6 +804,7 @@ body.nav-open { overflow: hidden; }
   font-weight: 400;
   line-height: 1.15;
   letter-spacing: -0.02em;
+  color: #ffffff;
 }
 .cta-band h3 em { font-style: italic; color: var(--yellow-bright); font-weight: 300; }
 
