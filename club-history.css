@@ -59,11 +59,11 @@
 
 /* Awards & Records landing */
 .latest-recipients {
-  background: var(--navy-deep);
-  color: var(--cream);
+  background: #f6f1e6;
+  color: var(--navy);
   padding: var(--space-5) 0 var(--space-6);
-  border-top: 1px solid rgba(246,241,230,0.08);
-  border-bottom: 1px solid rgba(246,241,230,0.08);
+  border-top: 1px solid #ddd8cc;
+  border-bottom: 1px solid #ddd8cc;
 }
 .latest-recipients-head {
   display: flex;
@@ -73,13 +73,22 @@
   margin-bottom: var(--space-5);
 }
 .latest-recipients h2 {
-  color: var(--cream);
-  font-size: clamp(24px, 2.2vw, 32px);
+  color: var(--navy);
+  font-size: 22px;
   max-width: 460px;
 }
-.latest-recipients h2 em { color: var(--yellow); }
-.latest-recipients .eyebrow { color: var(--yellow-bright); }
-.latest-recipients-link,
+.latest-recipients h2 em { color: var(--navy); }
+.latest-recipients .eyebrow { color: var(--navy); }
+.latest-recipients-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--navy);
+}
 .awards-launch-cta {
   display: inline-flex;
   align-items: center;
@@ -95,8 +104,8 @@
 .latest-recipients-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  border-top: 1px solid rgba(246,241,230,0.12);
-  border-bottom: 1px solid rgba(246,241,230,0.12);
+  border-top: 1px solid #ddd8cc;
+  border-bottom: 1px solid #ddd8cc;
 }
 .latest-recipient-card {
   display: flex;
@@ -104,25 +113,27 @@
   gap: 8px;
   min-height: 108px;
   padding: var(--space-4) var(--space-5);
-  border-right: 1px solid rgba(246,241,230,0.09);
+  border-right: 1px solid #ddd8cc;
   transition: background .15s;
 }
 .latest-recipient-card:last-child { border-right: none; }
 .latest-recipient-card:hover {
-  background: rgba(246,241,230,0.04);
+  background: rgba(4,28,44,0.035);
 }
 .latest-recipient-card span {
   font-size: 10px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(246,241,230,0.48);
+  color: var(--navy);
+  opacity: 0.55;
   font-weight: 800;
 }
 .latest-recipient-card strong {
   font-family: var(--display);
-  font-size: 20px;
-  line-height: 1.15;
-  color: var(--cream);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--navy);
   letter-spacing: -0.01em;
 }
 .awards-launchpad {
