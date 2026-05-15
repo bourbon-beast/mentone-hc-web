@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Page moved — Mentone Hockey Club</title>
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="colors_and_type.css">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<section class="section">
+  <div class="wrap">
+    <h1>Page moved</h1>
+    <p id="redirect-message">Checking whether this page has moved.</p>
+    <p><a id="redirect-link" href="index.html" class="btn btn-primary">Go to the home page</a></p>
+  </div>
+</section>
+<script>
+const legacyRedirects = {
+  "25th-anniversary-team.html": "history/25th-anniversary-team.html",
+  "club-history.html": "history/",
+  "club-song.html": "history/club-song.html",
+  "honour-board-burt-junior-club-person-award.html": "history/honour-boards/burt-junior-club-person-award.html",
+  "honour-board-coach-of-year.html": "history/honour-boards/coach-of-year.html",
+  "honour-board-coordinators.html": "history/honour-boards/coordinators.html",
+  "honour-board-dayton-clubman-award.html": "history/honour-boards/dayton-clubman-award.html",
+  "honour-board-executive.html": "history/honour-boards/executive.html",
+  "honour-board-holliday-club-woman-award.html": "history/honour-boards/holliday-club-woman-award.html",
+  "honour-board-mens-1st-xi.html": "history/honour-boards/mens-1st-xi.html",
+  "honour-board-mens-2nd-xi.html": "history/honour-boards/mens-2nd-xi.html",
+  "honour-board-mens-3rd-xi.html": "history/honour-boards/mens-3rd-xi.html",
+  "honour-board-mens-4th-xi.html": "history/honour-boards/mens-4th-xi.html",
+  "honour-board-mens-5th-xi.html": "history/honour-boards/mens-5th-xi.html",
+  "honour-board-mens-6th-xi.html": "history/honour-boards/mens-6th-xi.html",
+  "honour-board-mens-7th-xi.html": "history/honour-boards/mens-7th-xi.html",
+  "honour-board-mens-best-1st-year.html": "history/honour-boards/mens-best-1st-year.html",
+  "honour-board-mens-coaching.html": "history/honour-boards/mens-coaching.html",
+  "honour-board-mens-masters-1st-xi.html": "history/honour-boards/mens-masters-1st-xi.html",
+  "honour-board-mens-masters-2nd-xi.html": "history/honour-boards/mens-masters-2nd-xi.html",
+  "honour-board-mens-masters-3rd-xi.html": "history/honour-boards/mens-masters-3rd-xi.html",
+  "honour-board-mens-masters-4th-xi.html": "history/honour-boards/mens-masters-4th-xi.html",
+  "honour-board-mens-most-improved.html": "history/honour-boards/mens-most-improved.html",
+  "honour-board-mens-sharpshooter.html": "history/honour-boards/mens-sharpshooter.html",
+  "honour-board-presidents-cup.html": "history/honour-boards/presidents-cup.html",
+  "honour-board-womens-1st-xi.html": "history/honour-boards/womens-1st-xi.html",
+  "honour-board-womens-2nd-xi.html": "history/honour-boards/womens-2nd-xi.html",
+  "honour-board-womens-3rd-xi.html": "history/honour-boards/womens-3rd-xi.html",
+  "honour-board-womens-4th-xi.html": "history/honour-boards/womens-4th-xi.html",
+  "honour-board-womens-5th-xi.html": "history/honour-boards/womens-5th-xi.html",
+  "honour-board-womens-6th-xi.html": "history/honour-boards/womens-6th-xi.html",
+  "honour-board-womens-best-1st-year.html": "history/honour-boards/womens-best-1st-year.html",
+  "honour-board-womens-coaching.html": "history/honour-boards/womens-coaching.html",
+  "honour-board-womens-masters-1st-xi.html": "history/honour-boards/womens-masters-1st-xi.html",
+  "honour-board-womens-masters-2nd-xi.html": "history/honour-boards/womens-masters-2nd-xi.html",
+  "honour-board-womens-masters-3rd-xi.html": "history/honour-boards/womens-masters-3rd-xi.html",
+  "honour-board-womens-most-improved.html": "history/honour-boards/womens-most-improved.html",
+  "honour-board-womens-sharpshooter.html": "history/honour-boards/womens-sharpshooter.html"
+};
+const fileName = window.location.pathname.split('/').pop();
+const target = legacyRedirects[fileName];
+if (target) {
+  const basePath = window.location.pathname.slice(0, -fileName.length);
+  const destination = basePath + target + window.location.hash;
+  document.getElementById('redirect-message').textContent = 'Redirecting to the new page location.';
+  document.getElementById('redirect-link').href = destination;
+  document.getElementById('redirect-link').textContent = 'Continue to the new page';
+  window.location.replace(destination);
+} else {
+  document.getElementById('redirect-message').textContent = 'We could not find that page.';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+{
+  "season": 2026,
+  "club_id": 25879,
+  "sections": [
+    {
+      "id": "mens",
+      "label": "Men's",
+      "color": "yellow",
+      "grades": [
+        { "grade": "Premier League", "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/409898" },
+        { "grade": "PLR",            "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412426" },
+        { "grade": "Pennant B",      "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412423" },
+        { "grade": "Pennant C",      "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412424" },
+        { "grade": "Pennant E",      "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412425" },
+        { "grade": "Metro",          "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412422" }
+      ]
+    },
+    {
+      "id": "womens",
+      "label": "Women's",
+      "color": "blue",
+      "grades": [
+        { "grade": "Premier League", "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/409832" },
+        { "grade": "PLR",            "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412429" },
+        { "grade": "Pennant A",      "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412430" },
+        { "grade": "Pennant B",      "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412431" },
+        { "grade": "Pennant D",      "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412432" },
+        { "grade": "Metro",          "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412433" }
+      ]
+    },
+    {
+      "id": "juniors",
+      "label": "Juniors",
+      "color": "yellow",
+      "grades": [
+        { "grade": "U18 Boys",  "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412441" },
+        { "grade": "U16 Boys",  "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412443" },
+        { "grade": "U14 Boys",  "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412445" },
+        { "grade": "U12 Mixed", "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412447" }
+      ]
+    },
+    {
+      "id": "masters",
+      "label": "Masters",
+      "color": "blue",
+      "grades": [
+        { "grade": "Men's O40B",  "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412450" },
+        { "grade": "Men's O40C",  "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412451" },
+        { "grade": "Men's O50",   "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412452" },
+        { "grade": "Women's O45", "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412455" }
+      ]
+    }
+  ]
+}
