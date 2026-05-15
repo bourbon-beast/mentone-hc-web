@@ -30,6 +30,11 @@ REPO_ROOT   = SCRIPT_DIR.parent
 CONFIG_FILE = SCRIPT_DIR / "mentone_teams_2026.json"
 OUTPUT_FILE = REPO_ROOT / "fixtures.json"
 
+
+class FixtureUpdateError(RuntimeError):
+    """Raised when scraped fixture data is unsafe to publish."""
+
+
 # ── HTTP ──────────────────────────────────────────────────────────────────────
 
 HEADERS = {
@@ -115,8 +120,9 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
     try:
         soup = fetch_soup(team_url)
     except Exception as exc:
-        print(f"    WARNING: could not fetch page — {exc}", file=sys.stderr)
-        return []
+        raise FixtureUpdateError(
+            f"could not fetch {grade_label} fixtures from {team_url}: {exc}"
+        ) from exc
 
     fixtures = []
     seen_rounds: set[int] = set()
@@ -182,6 +188,66 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
     return fixtures
 
 
+def grade_fixture_counts(data: dict) -> dict[tuple[str, str], tuple[str, int]]:
+    counts = {}
+    for section in data.get("sections", []):
+        section_id = section.get("id") or section.get("label") or "unknown"
+        section_label = section.get("label") or section_id
+        for grade in section.get("grades", []):
+            grade_name = grade.get("grade") or "unknown"
+            fixtures = grade.get("fixtures") or []
+            counts[(section_id, grade_name)] = (
+                f"{section_label} / {grade_name}",
+                len(fixtures),
+            )
+    return counts
+
+
+def total_fixture_count(data: dict) -> int:
+    return sum(count for _, count in grade_fixture_counts(data).values())
+
+
+def load_existing_fixtures(path: Path) -> dict | None:
+    if not path.exists():
+        return None
+    with open(path, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def validate_scraped_fixtures(result: dict, existing: dict | None = None) -> None:
+    total = total_fixture_count(result)
+    if total == 0:
+        raise FixtureUpdateError(
+            "scraper returned zero fixtures; refusing to overwrite fixtures.json"
+        )
+
+    if existing is None:
+        return
+
+    existing_counts = grade_fixture_counts(existing)
+    new_counts = grade_fixture_counts(result)
+    wiped_grades = []
+    for key, (label, old_count) in existing_counts.items():
+        if old_count == 0:
+            continue
+        new_count = new_counts.get(key, (label, 0))[1]
+        if new_count == 0:
+            wiped_grades.append(label)
+
+    if wiped_grades:
+        raise FixtureUpdateError(
+            "scraper returned no fixtures for grades that currently have data: "
+            + ", ".join(wiped_grades)
+        )
+
+    existing_total = total_fixture_count(existing)
+    if existing_total and total * 2 < existing_total:
+        raise FixtureUpdateError(
+            f"scraper returned {total} fixtures, less than half of the current "
+            f"{existing_total}; refusing likely-truncated output"
+        )
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def build_fixtures_json(config: dict) -> dict:
@@ -226,13 +292,19 @@ def main() -> None:
         config = json.load(fh)
 
     print(f"Scraping fixtures for {config.get('season', 'unknown')} season …")
-    result = build_fixtures_json(config)
+    output_path = Path(args.output)
+
+    try:
+        result = build_fixtures_json(config)
+        validate_scraped_fixtures(result, load_existing_fixtures(output_path))
+    except FixtureUpdateError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        sys.exit(1)
 
     if args.dry_run:
         print("\n── fixtures.json (dry run) ──────────────────────────")
         print(json.dumps(result, indent=2))
     else:
-        output_path = Path(args.output)
         with open(output_path, "w", encoding="utf-8") as fh:
             json.dump(result, fh, indent=2)
             fh.write("\n")
