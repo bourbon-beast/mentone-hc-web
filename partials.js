@@ -1,6 +1,14 @@
 // Shared chrome + tweaks for the Mentone UI kit
 (function(){
+  const scriptSrc = document.currentScript?.getAttribute('src') || 'partials.js';
+  const rootPrefix = scriptSrc.endsWith('partials.js') ? scriptSrc.slice(0, -'partials.js'.length) : '';
+  const rootHref = (href) => {
+    if (/^(https?:|mailto:|tel:|#)/.test(href)) return href;
+    return `${rootPrefix}${href}`;
+  };
   const here = location.pathname.split('/').pop() || 'index.html';
+  const pathParts = location.pathname.split('/').filter(Boolean);
+  const isHistory = pathParts.includes('history');
 
   const NAV_ITEMS = [
     ['mens.html', "Men's"],
@@ -10,6 +18,7 @@
     ['new-players.html', 'New Players'],
     ['fixtures.html', 'Fixtures'],
     ['news.html', 'News'],
+    ['history/', 'Club History'],
     ['contact.html', 'Contact'],
   ];
 
@@ -23,8 +32,8 @@
   }
 
   function brand(isFooter) {
-    return `<a href="index.html" class="brand">
-      <div class="brand-mark" aria-hidden="true"><img src="assets/club-logo.png" alt="" /></div>
+    return `<a href="${rootHref('index.html')}" class="brand">
+      <div class="brand-mark" aria-hidden="true"><img src="${rootHref('assets/club-logo.png')}" alt="" /></div>
       <div class="brand-text">
         <div class="name">Mentone Hockey Club</div>
         <div class="sub">Est. 1976 · Bayside</div>
@@ -34,8 +43,9 @@
 
   function injectNav(active) {
     const links = NAV_ITEMS.map(([href, label]) => {
-      const cls = (href === here || active === href) ? ' class="active"' : '';
-      return `<li><a href="${href}"${cls}>${label}</a></li>`;
+      const isActive = href === here || active === href || (href === 'history/' && isHistory);
+      const cls = isActive ? ' class="active"' : '';
+      return `<li><a href="${rootHref(href)}"${cls}>${label}</a></li>`;
     }).join('');
     return `<nav class="nav" aria-label="Main"><div class="wrap nav-inner">
       ${brand()}
@@ -89,7 +99,7 @@
         <h3>Ready to grab a stick? <em>Come down</em> — or register online for 2026.</h3>
         <div style="display:flex; gap:14px; flex-wrap:wrap;">
           <a href="${CLUB_REGISTRATIONS_URL}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Register for 2026</a>
-          <a href="contact.html" class="btn btn-ghost">Contact the club</a>
+          <a href="${rootHref('contact.html')}" class="btn btn-ghost">Contact the club</a>
         </div>
       </div></div>
     </section>`;
@@ -105,19 +115,20 @@
         <div class="foot-col">
           <h5>Sections</h5>
           <ul>
-            <li><a href="mens.html">Men's</a></li>
-            <li><a href="womens.html">Women's</a></li>
-            <li><a href="juniors.html">Juniors</a></li>
-            <li><a href="masters.html">Masters</a></li>
+            <li><a href="${rootHref('mens.html')}">Men's</a></li>
+            <li><a href="${rootHref('womens.html')}">Women's</a></li>
+            <li><a href="${rootHref('juniors.html')}">Juniors</a></li>
+            <li><a href="${rootHref('masters.html')}">Masters</a></li>
           </ul>
         </div>
         <div class="foot-col">
           <h5>The Club</h5>
           <ul>
-            <li><a href="new-players.html">New Players</a></li>
-            <li><a href="fixtures.html">Fixtures &amp; Results</a></li>
-            <li><a href="news.html">News</a></li>
-            <li><a href="sponsors.html">Sponsors</a></li>
+            <li><a href="${rootHref('new-players.html')}">New Players</a></li>
+            <li><a href="${rootHref('history/')}">Club History</a></li>
+            <li><a href="${rootHref('fixtures.html')}">Fixtures &amp; Results</a></li>
+            <li><a href="${rootHref('news.html')}">News</a></li>
+            <li><a href="${rootHref('sponsors.html')}">Sponsors</a></li>
             <li><a href="${CLUB_REGISTRATIONS_URL}" target="_blank" rel="noopener noreferrer">Registration</a></li>
           </ul>
         </div>

@@ -1,0 +1,410 @@
+
+/* ── Shared Club History styles ──────────────────────────────── */
+
+/* Hero */
+.hb-hero {
+  background: var(--navy);
+  padding: var(--space-8) 0 var(--space-7);
+  position: relative;
+  overflow: hidden;
+}
+.hb-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(241,180,52,0.4), transparent);
+}
+.hb-hero-grade {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(241,180,52,0.12);
+  border: 1px solid rgba(241,180,52,0.2);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  margin-bottom: var(--space-4);
+}
+.hb-hero-grade .eyebrow { margin: 0; font-size: 11px; }
+.hb-hero h1 { color: var(--cream); margin-bottom: var(--space-3); }
+.hb-hero h1 em { color: var(--yellow); }
+.hb-hero-meta {
+  display: flex;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+  margin-top: var(--space-5);
+}
+.hb-hero-meta-item .label {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(246,241,230,0.4);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 2px;
+}
+.hb-hero-meta-item .value {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--yellow);
+  letter-spacing: -0.02em;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--muted);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.breadcrumb a { color: var(--muted); transition: color .15s; }
+.breadcrumb a:hover { color: var(--navy); }
+.breadcrumb-sep { color: var(--line); }
+
+/* Layout */
+.hb-layout {
+  padding: var(--space-7) 0;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: var(--space-7);
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .hb-layout { grid-template-columns: 1fr; }
+  .hb-sidebar { order: -1; }
+}
+
+/* Honour board photo */
+.hb-photo-board {
+  margin-bottom: var(--space-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.hb-photo-img { width: 100%; display: block; }
+.hb-photo-caption {
+  padding: var(--space-2) var(--space-4);
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--cream-warm);
+  border-top: 1px solid var(--line-light);
+  font-style: italic;
+}
+
+/* Table wrap */
+.hb-table-wrap {
+  background: var(--bg-surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.hb-table-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--line);
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.hb-table-title {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--navy);
+}
+.hb-filter { display: flex; gap: 6px; }
+.hb-filter-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+.hb-filter-btn.active, .hb-filter-btn:hover {
+  background: var(--navy);
+  color: var(--cream);
+  border-color: var(--navy);
+}
+.hb-table { width: 100%; border-collapse: collapse; }
+.hb-table thead tr {
+  background: var(--cream-warm);
+  border-bottom: 1px solid var(--line);
+}
+.hb-table th {
+  padding: 10px var(--space-5);
+  text-align: left;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+}
+.hb-table tbody tr {
+  border-bottom: 1px solid var(--line-light);
+  transition: background .1s;
+}
+.hb-table tbody tr:last-child { border-bottom: none; }
+.hb-table tbody tr:hover { background: var(--blue-wash); }
+.hb-table td {
+  padding: 11px var(--space-5);
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.hb-table td.year {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  width: 58px;
+}
+.hb-table td.player { font-weight: 500; }
+.hb-table td.grade-tag { text-align: right; }
+.hb-table tr.covid td { color: var(--muted); font-style: italic; }
+.hb-table tr.current { background: rgba(241,180,52,0.05); }
+.hb-table tr.current td.player { font-weight: 600; color: var(--navy); }
+.hb-table tr.current td.year::after {
+  content: '';
+  display: inline-block;
+  width: 5px; height: 5px;
+  background: var(--yellow);
+  border-radius: 50%;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.grade-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  background: var(--blue-wash);
+  color: var(--navy);
+}
+.grade-pill.pl {
+  background: rgba(241,180,52,0.15);
+  color: var(--yellow-deep);
+}
+
+/* Sidebar */
+.hb-sidebar { display: flex; flex-direction: column; gap: var(--space-4); }
+.sidebar-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.sidebar-card-head {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--muted);
+}
+.sidebar-card-body { padding: var(--space-4); }
+.stat-block { display: flex; flex-direction: column; gap: var(--space-3); }
+.stat-row { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); }
+.stat-name { font-size: 14px; font-weight: 500; color: var(--navy); }
+.stat-count {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--yellow-deep);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.stat-bar-track {
+  height: 3px;
+  background: var(--line-light);
+  border-radius: 2px;
+  margin-top: 4px;
+}
+.stat-bar-fill {
+  height: 100%;
+  background: var(--yellow);
+  border-radius: 2px;
+}
+.related-links { display: flex; flex-direction: column; }
+.related-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px var(--space-4);
+  font-size: 14px;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line-light);
+  transition: background .1s, color .1s;
+}
+.related-link:last-child { border-bottom: none; }
+.related-link:hover { background: var(--blue-wash); color: var(--navy); }
+.related-link svg { width: 12px; height: 12px; opacity: 0.35; }
+
+/* History hub cards */
+.life-members-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--space-4);
+}
+.life-member-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-3);
+}
+.life-member-avatar {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(241,180,52,0.25);
+  background: var(--cream-warm);
+}
+.life-member-initials {
+  display: grid;
+  place-items: center;
+  font-family: var(--display);
+  font-size: 30px;
+  font-style: italic;
+  color: var(--yellow-deep);
+  background: linear-gradient(135deg, rgba(241,180,52,0.18), rgba(51,88,128,0.12));
+}
+.life-member-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy);
+  line-height: 1.25;
+}
+.awards-group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-4);
+}
+.awards-group-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.awards-group-card h3 {
+  padding: var(--space-4) var(--space-4) 0;
+  color: var(--navy);
+}
+.awards-latest {
+  margin: var(--space-3) var(--space-4);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  background: rgba(241,180,52,0.1);
+  color: var(--muted);
+  font-size: 13px;
+}
+.awards-latest strong {
+  color: var(--navy);
+  font-weight: 600;
+}
+.awards-link-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line-light);
+}
+.award-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--line-light);
+  color: var(--ink);
+  transition: background .1s, color .1s;
+}
+.award-row:last-child { border-bottom: none; }
+.award-row:hover { background: var(--blue-wash); color: var(--navy); }
+.award-row-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+}
+.award-row-current {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.award-row-tradition .award-row-current {
+  color: var(--yellow-deep);
+  font-weight: 600;
+}
+
+/* Back link */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  padding: var(--space-5) 0 0;
+  transition: color .15s;
+}
+.back-link:hover { color: var(--navy); }
+.back-link svg { width: 14px; height: 14px; }
+
+/* Prose pages (25th ann, club song) */
+.history-prose h1, .history-prose h2, .history-prose h3 {
+  font-family: var(--display);
+  color: var(--navy);
+  margin: var(--space-5) 0 var(--space-3);
+}
+.history-prose p { line-height: 1.7; margin-bottom: var(--space-4); }
+.history-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--space-5);
+  font-size: 14px;
+}
+.history-prose th {
+  padding: 8px var(--space-4);
+  background: var(--cream-warm);
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.history-prose td {
+  padding: 9px var(--space-4);
+  border-bottom: 1px solid var(--line-light);
+}
+.history-prose tr:last-child td { border-bottom: none; }
+
+/* Club song */
+.song-full { padding: var(--space-5) 0; }
+.song-text {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--navy);
+  white-space: pre-wrap;
+  border-left: 3px solid var(--yellow);
+  padding-left: var(--space-5);
+  margin: 0;
+}
