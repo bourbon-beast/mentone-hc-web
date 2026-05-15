@@ -1,7 +1,8 @@
 // Shared chrome + tweaks for the Mentone UI kit
 (function(){
   const scriptSrc = document.currentScript?.getAttribute('src') || 'partials.js';
-  const rootPrefix = scriptSrc.endsWith('partials.js') ? scriptSrc.slice(0, -'partials.js'.length) : '';
+  const scriptPath = scriptSrc.split(/[?#]/)[0];
+  const rootPrefix = scriptPath.endsWith('partials.js') ? scriptPath.slice(0, -'partials.js'.length) : '';
   const rootHref = (href) => {
     if (/^(https?:|mailto:|tel:|#)/.test(href)) return href;
     return `${rootPrefix}${href}`;
@@ -18,7 +19,7 @@
     ['new-players.html', 'New Players'],
     ['fixtures.html', 'Fixtures'],
     ['news.html', 'News'],
-    ['history/', 'Club History'],
+    ['history/', 'Awards &amp; Records'],
     ['contact.html', 'Contact'],
   ];
 
@@ -125,7 +126,8 @@
           <h5>The Club</h5>
           <ul>
             <li><a href="${rootHref('new-players.html')}">New Players</a></li>
-            <li><a href="${rootHref('history/')}">Club History</a></li>
+            <li><a href="${rootHref('uniforms.html')}">Uniforms</a></li>
+            <li><a href="${rootHref('history/')}">Awards &amp; Records</a></li>
             <li><a href="${rootHref('fixtures.html')}">Fixtures &amp; Results</a></li>
             <li><a href="${rootHref('news.html')}">News</a></li>
             <li><a href="${rootHref('sponsors.html')}">Sponsors</a></li>

@@ -42,7 +42,7 @@ html { scroll-behavior: smooth; }
 body {
   font-family: var(--body);
   color: var(--ink);
-  background: var(--cream);
+  background: var(--blue-wash);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -718,7 +718,7 @@ footer {
 .fix-time { color: rgba(246, 241, 230, 0.6); font-size: 13px; font-variant-numeric: tabular-nums; }
 
 /* ---------- Hook in2 Hockey (homepage tease) ---------- */
-.hook { background: var(--cream); position: relative; overflow: hidden; }
+.hook { background: var(--blue-wash); position: relative; overflow: hidden; }
 .hook-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 80px; align-items: center; }
 .hook-visual {
   position: relative;
@@ -829,7 +829,7 @@ footer {
 .news-head .btn { flex-shrink: 0; }
 .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
 .news-card {
-  background: var(--cream);
+  background: #ffffff;
   border-radius: 4px;
   overflow: hidden;
   transition: all 0.3s;
@@ -882,7 +882,7 @@ footer {
 .news-excerpt { color: var(--muted); font-size: 14px; line-height: 1.6; }
 
 /* ---------- Sponsors (homepage) ---------- */
-.sponsors { background: var(--cream); }
+.sponsors { background: var(--blue-wash); }
 .sponsors-head { text-align: center; margin-bottom: 48px; }
 .sponsors-head .eyebrow { color: var(--navy); }
 .sponsors-head h3 {
@@ -906,7 +906,7 @@ footer {
   overflow: hidden;
 }
 .sponsor-tile {
-  background: var(--cream);
+  background: #ffffff;
   aspect-ratio: 3 / 2;
   display: grid;
   place-items: center;

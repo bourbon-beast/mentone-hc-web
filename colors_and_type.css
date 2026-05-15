@@ -20,7 +20,7 @@
   --yellow-deep: #c89120;   /* Eyebrow / link underline */
 
   /* ---------- Neutrals ---------- */
-  --cream: #f6f1e6;         /* Default page background */
+  --cream: #f6f1e6;         /* Warm header / accent neutral */
   --cream-warm: #efe5cf;
   --off-white: #fafaf7;
   --ink: #041C2C;           /* Body text */
@@ -33,7 +33,7 @@
   --fg-2: var(--muted);
   --fg-inverse: var(--cream);
   --fg-accent: var(--yellow-deep);
-  --bg-1: var(--cream);
+  --bg-1: var(--blue-wash);
   --bg-2: var(--blue-wash);
   --bg-inverse: var(--navy);
   --bg-surface: #ffffff;

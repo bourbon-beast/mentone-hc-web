@@ -12,7 +12,7 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 body {
   font-family: var(--body);
   color: var(--ink);
-  background: var(--cream);
+  background: var(--bg-1);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -586,7 +586,7 @@ body.nav-open { overflow: hidden; }
 .week-link:hover svg { transform: translateX(3px); }
 
 /* ============ HOOK IN 2 HOCKEY ============ */
-.hook { background: var(--cream); position: relative; overflow: hidden; }
+.hook { background: var(--bg-1); position: relative; overflow: hidden; }
 .hook-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 80px; align-items: center; }
 .hook-visual {
   position: relative;
@@ -676,7 +676,7 @@ body.nav-open { overflow: hidden; }
 .news-head .section-head { margin-bottom: 0; }
 .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
 .news-card {
-  background: var(--cream);
+  background: var(--bg-surface);
   border-radius: 4px;
   overflow: hidden;
   transition: all .3s;
@@ -716,7 +716,7 @@ body.nav-open { overflow: hidden; }
 .news-excerpt { color: var(--muted); font-size: 14px; line-height: 1.6; }
 
 /* ============ SPONSORS ============ */
-.sponsors { background: var(--cream); }
+.sponsors { background: var(--bg-1); }
 .sponsors-head { text-align: center; margin-bottom: 48px; }
 .sponsors-head .eyebrow { color: var(--navy); }
 .sponsors-head h3 {
@@ -740,7 +740,7 @@ body.nav-open { overflow: hidden; }
   overflow: hidden;
 }
 .sponsor-tile {
-  background: var(--cream);
+  background: var(--bg-surface);
   aspect-ratio: 3/2;
   display: grid;
   place-items: center;
@@ -760,6 +760,260 @@ body.nav-open { overflow: hidden; }
 .sponsors-cta { margin-top: 48px; text-align: center; font-size: 14px; color: var(--muted); }
 .sponsors-cta a { color: var(--navy); font-weight: 700; border-bottom: 1px solid var(--yellow); padding-bottom: 2px; }
 
+/* ============ UNIFORMS ============ */
+.uniforms-page .section {
+  padding: 78px 0;
+}
+.uniforms-page .section-head {
+  margin-bottom: 40px;
+}
+.uniform-showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.uniform-showcase-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.uniform-showcase-card h3 {
+  margin-bottom: 18px;
+}
+.uniform-kit-row {
+  display: grid;
+  align-items: end;
+  gap: 16px;
+}
+.uniform-kit-row--four {
+  grid-template-columns: 1fr 1fr 1fr 0.8fr;
+}
+.uniform-kit-row--three {
+  grid-template-columns: 1fr 1fr 0.8fr;
+}
+.uniform-kit-row img {
+  width: 100%;
+  max-height: 250px;
+  object-fit: contain;
+  object-position: bottom center;
+  margin: 0 auto;
+}
+.uniform-price-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.uniform-price-card,
+.uniform-order-card,
+.uniform-note-card,
+.uniform-clash-table-wrap {
+  background: var(--bg-surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.uniform-price-card {
+  padding: 28px;
+}
+.uniform-price-tag {
+  display: inline-flex;
+  margin-bottom: 18px;
+  padding: 5px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(241,180,52,0.14);
+  color: var(--yellow-deep);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.uniform-price-card h3 {
+  margin-bottom: 10px;
+}
+.uniform-price-card p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.uniform-price {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-light);
+  font-family: var(--display);
+  font-size: 24px;
+  color: var(--navy);
+}
+.uniform-price a {
+  color: var(--yellow-deep);
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+}
+.uniform-order-copy {
+  max-width: 860px;
+}
+.uniform-number-copy {
+  max-width: 860px;
+}
+.uniform-order-card {
+  background: var(--navy);
+  color: var(--cream);
+  padding: 36px;
+}
+.uniform-order-card h3 {
+  color: var(--cream);
+  margin-bottom: 24px;
+}
+.uniform-order-card h3 em {
+  color: var(--yellow);
+  font-style: italic;
+  font-weight: 300;
+}
+.uniform-steps {
+  list-style: none;
+  display: grid;
+  gap: 16px;
+  counter-reset: uniform-step;
+}
+.uniform-steps li {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 14px;
+  align-items: start;
+  color: rgba(246,241,230,0.74);
+}
+.uniform-steps li::before {
+  counter-increment: uniform-step;
+  content: counter(uniform-step, decimal-leading-zero);
+  font-family: var(--display);
+  color: var(--yellow);
+  font-size: 20px;
+  line-height: 1;
+}
+.uniform-steps strong {
+  display: block;
+  color: var(--cream);
+  font-size: 14px;
+}
+.uniform-steps span {
+  display: block;
+  font-size: 13px;
+  line-height: 1.45;
+  margin-top: 2px;
+}
+.uniform-note-card {
+  padding: 36px;
+}
+.uniform-note-card--below {
+  max-width: 720px;
+  margin-top: 32px;
+}
+.uniform-note-card h3 {
+  margin-bottom: 14px;
+}
+.uniform-note-card p {
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+.uniform-note-card a {
+  color: var(--yellow-deep);
+  font-weight: 800;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 1px;
+}
+.uniform-clash-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.uniform-clash-table caption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.uniform-clash-table th {
+  padding: 16px 20px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--navy);
+  text-align: left;
+}
+.uniform-clash-head-shirt { background: var(--yellow); }
+.uniform-clash-head-sock { background: var(--blue); color: var(--cream); }
+.uniform-clash-table td {
+  vertical-align: top;
+  padding: 22px;
+  border-top: 1px solid var(--line-light);
+}
+.uniform-clash-table td + td,
+.uniform-clash-table th + th {
+  border-left: 1px solid var(--line-light);
+}
+.uniform-clash-list {
+  list-style: none;
+  columns: 3;
+  column-gap: 26px;
+}
+.uniform-clash-list--socks {
+  columns: 1;
+}
+.uniform-clash-list li {
+  break-inside: avoid;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink);
+  padding: 3px 0;
+}
+
+@media (max-width: 900px) {
+  .uniform-showcase-grid,
+  .uniform-price-grid {
+    grid-template-columns: 1fr;
+  }
+  .uniform-clash-list {
+    columns: 2;
+  }
+}
+@media (max-width: 560px) {
+  .uniforms-page .section {
+    padding: 56px 0;
+  }
+  .uniform-price-grid {
+    grid-template-columns: 1fr;
+  }
+  .uniform-kit-row,
+  .uniform-kit-row--four,
+  .uniform-kit-row--three {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .uniform-kit-row img {
+    max-height: 210px;
+  }
+  .uniform-clash-table,
+  .uniform-clash-table thead,
+  .uniform-clash-table tbody,
+  .uniform-clash-table tr,
+  .uniform-clash-table th,
+  .uniform-clash-table td {
+    display: block;
+    width: 100%;
+  }
+  .uniform-clash-table th + th,
+  .uniform-clash-table td + td {
+    border-left: none;
+  }
+  .uniform-clash-list {
+    columns: 1;
+  }
+}
+
 /* ============ CTA BAND ============ */
 .cta-band {
   background: var(--navy-soft);
@@ -772,17 +1026,6 @@ body.nav-open { overflow: hidden; }
   content: ''; position: absolute;
   top: 0; left: 0; right: 0; height: 1px;
   background: linear-gradient(90deg, transparent, var(--yellow), transparent);
-}
-.cta-band::after {
-  content: '';
-  position: absolute;
-  right: -60px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 260px; aspect-ratio: 1/1;
-  background: url('assets/panther-mascot.png') center/contain no-repeat;
-  opacity: .22;
-  filter: drop-shadow(0 0 20px rgba(241,180,52,.3));
 }
 .cta-band-inner {
   display: grid;
@@ -1226,7 +1469,6 @@ body[data-hero="poster"] .hero-copy { max-width: 900px; }
   .btn { padding: 13px 22px; }
   .nav-cta { display: none; }
   .cta-band-inner { gap: 24px; }
-  .cta-band::after { display: none; }
   .section-head { margin-bottom: 36px; }
   .section-title { font-size: clamp(26px, 7vw, 40px); }
   .page-hero h1 { font-size: clamp(32px, 9vw, 52px); }
