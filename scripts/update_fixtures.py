@@ -40,6 +40,10 @@ HEADERS = {
 }
 
 
+class FixtureScrapeError(RuntimeError):
+    """Raised when scraping cannot produce trustworthy fixture data."""
+
+
 def fetch_soup(url: str) -> BeautifulSoup:
     resp = requests.get(url, headers=HEADERS, timeout=30)
     resp.raise_for_status()
@@ -115,8 +119,7 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
     try:
         soup = fetch_soup(team_url)
     except Exception as exc:
-        print(f"    WARNING: could not fetch page — {exc}", file=sys.stderr)
-        return []
+        raise FixtureScrapeError(f"{grade_label}: could not fetch page: {exc}") from exc
 
     fixtures = []
     seen_rounds: set[int] = set()
@@ -162,6 +165,11 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
         opp_tag  = container.find("a", href=re.compile(r"/games/team/"))
         opponent = clean_opponent(opp_tag.get_text(strip=True)) if opp_tag else None
 
+        if not date_iso or not opponent:
+            raise FixtureScrapeError(
+                f"{grade_label}: could not parse fixture details for round {round_num}"
+            )
+
         # Home / Away  (venue name is the ground used)
         is_home = "mentone" in (venue_name or "").lower()
 
@@ -177,6 +185,9 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
             "venue":    determine_venue(venue_name, is_home),
             "result":   result,
         })
+
+    if not fixtures:
+        raise FixtureScrapeError(f"{grade_label}: no fixtures found at {team_url}")
 
     fixtures.sort(key=lambda f: f["date"] or "")
     return fixtures
@@ -226,7 +237,11 @@ def main() -> None:
         config = json.load(fh)
 
     print(f"Scraping fixtures for {config.get('season', 'unknown')} season …")
-    result = build_fixtures_json(config)
+    try:
+        result = build_fixtures_json(config)
+    except FixtureScrapeError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        sys.exit(1)
 
     if args.dry_run:
         print("\n── fixtures.json (dry run) ──────────────────────────")
