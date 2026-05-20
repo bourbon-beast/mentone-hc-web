@@ -252,6 +252,10 @@
 
   function resultCell(result) {
     if (!result) return `<span class="fix-result tbd">TBC</span>`;
+    const outcome = String(result).trim().toUpperCase();
+    const outcomeClass = { W: 'win', L: 'loss', D: 'draw' }[outcome];
+    if (outcomeClass) return `<span class="fix-result ${outcomeClass}">${outcome}</span>`;
+
     const parts = result.split('-').map(Number);
     if (parts[0] > parts[1]) return `<span class="fix-result win">${result}</span>`;
     if (parts[0] < parts[1]) return `<span class="fix-result loss">${result}</span>`;
