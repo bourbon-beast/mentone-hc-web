@@ -1,3 +1,4 @@
+import json
 import re
 import shutil
 import subprocess
@@ -18,6 +19,13 @@ def extract_function(source: str, name: str) -> str:
     if not match:
         raise AssertionError(f"Could not find function {name}")
     return textwrap.dedent(match.group(0))
+
+
+class StaticDataTests(unittest.TestCase):
+    def test_json_data_files_are_valid(self):
+        for filename in ("fixtures.json", "news.json"):
+            with self.subTest(filename=filename):
+                json.loads((ROOT / filename).read_text())
 
 
 @unittest.skipIf(shutil.which("node") is None, "node is required for static page JS tests")
