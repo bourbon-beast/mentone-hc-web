@@ -252,9 +252,17 @@
 
   function resultCell(result) {
     if (!result) return `<span class="fix-result tbd">TBC</span>`;
-    const parts = result.split('-').map(Number);
-    if (parts[0] > parts[1]) return `<span class="fix-result win">${result}</span>`;
-    if (parts[0] < parts[1]) return `<span class="fix-result loss">${result}</span>`;
+    const outcome = String(result).trim().toUpperCase();
+    if (outcome === 'W') return `<span class="fix-result win">${result}</span>`;
+    if (outcome === 'L') return `<span class="fix-result loss">${result}</span>`;
+    if (outcome === 'D') return `<span class="fix-result draw">${result}</span>`;
+
+    const score = String(result).match(/^\s*(\d+)\s*-\s*(\d+)\s*$/);
+    if (!score) return `<span class="fix-result tbd">${result}</span>`;
+    const homeScore = Number(score[1]);
+    const awayScore = Number(score[2]);
+    if (homeScore > awayScore) return `<span class="fix-result win">${result}</span>`;
+    if (homeScore < awayScore) return `<span class="fix-result loss">${result}</span>`;
     return `<span class="fix-result draw">${result}</span>`;
   }
 
