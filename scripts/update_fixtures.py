@@ -36,13 +36,18 @@ HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
         "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-    )
+    ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
 }
+
+CLUB_NAME = "Mentone Hockey Club"
 
 
 def fetch_soup(url: str) -> BeautifulSoup:
     resp = requests.get(url, headers=HEADERS, timeout=30)
     resp.raise_for_status()
+    if not resp.text.strip():
+        raise ValueError(f"empty response from {url}")
     return BeautifulSoup(resp.text, "html.parser")
 
 
@@ -105,7 +110,29 @@ def determine_result(block: str, status: str) -> str | None:
     return {"Win": "W", "Loss": "L", "Draw": "D"}.get(m.group(1))
 
 
-def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
+def normalise_space(value: str) -> str:
+    return " ".join(value.split())
+
+
+def page_heading(soup: BeautifulSoup) -> str:
+    for tag in soup.find_all(["h1", "h2", "h3"]):
+        text = normalise_space(tag.get_text(" ", strip=True))
+        if "2026" in text and ("Competition" in text or CLUB_NAME in text):
+            return text
+    return normalise_space(soup.get_text(" ", strip=True)[:200])
+
+
+def validate_team_page(soup: BeautifulSoup, expected_title: str | None) -> None:
+    heading = page_heading(soup)
+    if "Team not found" in heading:
+        raise ValueError(f"Hockey Victoria team page not found: {heading}")
+    if CLUB_NAME not in heading:
+        raise ValueError(f"team page is not for {CLUB_NAME}: {heading}")
+    if expected_title and normalise_space(expected_title) not in heading:
+        raise ValueError(f"expected {expected_title!r}, got {heading!r}")
+
+
+def parse_team_page(team_url: str, grade_label: str, expected_title: str | None = None) -> list[dict]:
     """
     Scrape one HV team page and return a list of fixture dicts matching the
     fixtures.json schema:
@@ -116,7 +143,9 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
         soup = fetch_soup(team_url)
     except Exception as exc:
         print(f"    WARNING: could not fetch page — {exc}", file=sys.stderr)
-        return []
+        raise
+
+    validate_team_page(soup, expected_title)
 
     fixtures = []
     seen_rounds: set[int] = set()
@@ -179,6 +208,8 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
         })
 
     fixtures.sort(key=lambda f: f["date"] or "")
+    if not fixtures:
+        raise ValueError(f"no fixtures parsed for {grade_label} from {team_url}")
     return fixtures
 
 
@@ -191,7 +222,11 @@ def build_fixtures_json(config: dict) -> dict:
         grades_out = []
         print(f"\n[{section['label']}]")
         for grade_cfg in section["grades"]:
-            fixtures = parse_team_page(grade_cfg["team_url"], grade_cfg["grade"])
+            fixtures = parse_team_page(
+                grade_cfg["team_url"],
+                grade_cfg["grade"],
+                grade_cfg.get("expected_title"),
+            )
             grades_out.append({
                 "grade":    grade_cfg["grade"],
                 "fixtures": fixtures,
