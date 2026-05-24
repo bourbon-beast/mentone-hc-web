@@ -30,6 +30,10 @@ REPO_ROOT   = SCRIPT_DIR.parent
 CONFIG_FILE = SCRIPT_DIR / "mentone_teams_2026.json"
 OUTPUT_FILE = REPO_ROOT / "fixtures.json"
 
+
+class ScrapeValidationError(RuntimeError):
+    """Raised when a source page cannot be trusted for fixture output."""
+
 # ── HTTP ──────────────────────────────────────────────────────────────────────
 
 HEADERS = {
@@ -42,6 +46,10 @@ HEADERS = {
 
 def fetch_soup(url: str) -> BeautifulSoup:
     resp = requests.get(url, headers=HEADERS, timeout=30)
+    if resp.status_code != 200:
+        raise ScrapeValidationError(f"unexpected HTTP {resp.status_code}")
+    if not resp.text.strip():
+        raise ScrapeValidationError("empty response body")
     resp.raise_for_status()
     return BeautifulSoup(resp.text, "html.parser")
 
@@ -105,18 +113,40 @@ def determine_result(block: str, status: str) -> str | None:
     return {"Win": "W", "Loss": "L", "Draw": "D"}.get(m.group(1))
 
 
-def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
+def normalise_text(text: str) -> str:
+    return " ".join(text.split())
+
+
+def validate_team_page(
+    soup: BeautifulSoup,
+    expected_title: str | None,
+    grade_label: str,
+    team_url: str,
+) -> None:
+    if not expected_title:
+        return
+
+    page_text = normalise_text(soup.get_text(" ", strip=True))
+    expected = normalise_text(expected_title)
+    if expected not in page_text:
+        raise ScrapeValidationError(
+            f"{grade_label} page did not match expected title {expected!r}: {team_url}"
+        )
+
+
+def parse_team_page(
+    team_url: str,
+    grade_label: str,
+    expected_title: str | None = None,
+) -> list[dict]:
     """
     Scrape one HV team page and return a list of fixture dicts matching the
     fixtures.json schema:
         { date, day, time, opponent, venue, result }
     """
     print(f"  Fetching {grade_label} … {team_url}", flush=True)
-    try:
-        soup = fetch_soup(team_url)
-    except Exception as exc:
-        print(f"    WARNING: could not fetch page — {exc}", file=sys.stderr)
-        return []
+    soup = fetch_soup(team_url)
+    validate_team_page(soup, expected_title, grade_label, team_url)
 
     fixtures = []
     seen_rounds: set[int] = set()
@@ -159,7 +189,14 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
         venue_name = venue_tag.get_text(strip=True) if venue_tag else None
 
         # Opponent
-        opp_tag  = container.find("a", href=re.compile(r"/games/team/"))
+        team_tags = container.find_all("a", href=re.compile(r"/games/team/"))
+        opp_tag = next(
+            (
+                tag for tag in team_tags
+                if clean_opponent(tag.get_text(strip=True)) != "Mentone Hockey Club"
+            ),
+            team_tags[0] if team_tags else None,
+        )
         opponent = clean_opponent(opp_tag.get_text(strip=True)) if opp_tag else None
 
         # Home / Away  (venue name is the ground used)
@@ -179,6 +216,12 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
         })
 
     fixtures.sort(key=lambda f: f["date"] or "")
+    if not fixtures:
+        raise ScrapeValidationError(f"{grade_label} produced no fixtures: {team_url}")
+    if any(f.get("opponent") == "Mentone Hockey Club" for f in fixtures):
+        raise ScrapeValidationError(
+            f"{grade_label} produced Mentone as an opponent: {team_url}"
+        )
     return fixtures
 
 
@@ -191,7 +234,11 @@ def build_fixtures_json(config: dict) -> dict:
         grades_out = []
         print(f"\n[{section['label']}]")
         for grade_cfg in section["grades"]:
-            fixtures = parse_team_page(grade_cfg["team_url"], grade_cfg["grade"])
+            fixtures = parse_team_page(
+                grade_cfg["team_url"],
+                grade_cfg["grade"],
+                grade_cfg.get("expected_title"),
+            )
             grades_out.append({
                 "grade":    grade_cfg["grade"],
                 "fixtures": fixtures,
