@@ -188,6 +188,13 @@
     return `<span class="cat-dot ${CAT_DOTS[cat] || 'cat-club'}"></span>`;
   }
 
+  function attr(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;');
+  }
+
   function renderFeatured(a) {
     return `
     <a href="#${a.id}" class="news-featured" onclick="showArticle('${a.id}'); return false;">
@@ -219,12 +226,27 @@
     return `<div class="news-filters">
       ${CATEGORIES.map(c => `
         <button class="news-filter-btn${c === activeCategory ? ' active' : ''}"
-          onclick="filterNews('${c}')">${c}</button>`).join('')}
+          type="button" data-news-filter="${attr(c)}">${c}</button>`).join('')}
     </div>`;
   }
 
   let allArticles = [];
   let currentFilter = 'All';
+  const newsContent = document.getElementById('news-content');
+
+  newsContent.addEventListener('click', function(event) {
+    const backButton = event.target.closest('[data-news-back]');
+    if (backButton) {
+      event.preventDefault();
+      renderNews();
+      return;
+    }
+
+    const filterButton = event.target.closest('[data-news-filter]');
+    if (!filterButton) return;
+    event.preventDefault();
+    filterNews(filterButton.dataset.newsFilter);
+  });
 
   window.filterNews = function(cat) {
     currentFilter = cat;
@@ -234,8 +256,8 @@
   window.showArticle = function(id) {
     const a = allArticles.find(x => x.id === id);
     if (!a) return;
-    document.getElementById('news-content').innerHTML = `
-      <button onclick="renderNews()" style="display:inline-flex;align-items:center;gap:8px;margin-bottom:32px;font-size:14px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--body);">
+    newsContent.innerHTML = `
+      <button type="button" data-news-back style="display:inline-flex;align-items:center;gap:8px;margin-bottom:32px;font-size:14px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--body);">
         ← Back to news
       </button>
       <div style="max-width:720px;">
@@ -268,7 +290,7 @@
     }
 
     html += `<div style="font-size:12px;color:var(--muted);margin-top:48px;padding-top:24px;border-top:1px solid var(--line-light);">Last updated: ${window._newsUpdated || ''}</div>`;
-    document.getElementById('news-content').innerHTML = html;
+    newsContent.innerHTML = html;
   }
 
   fetch('news.json')
@@ -279,7 +301,7 @@
       renderNews();
     })
     .catch(err => {
-      document.getElementById('news-content').innerHTML =
+      newsContent.innerHTML =
         `<div style="padding:32px;background:#fff3cd;border-radius:4px;font-size:14px;">News unavailable right now — please check back soon.<br/><small>${err.message}</small></div>`;
     });
 

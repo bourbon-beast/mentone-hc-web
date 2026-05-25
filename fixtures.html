@@ -250,8 +250,19 @@
     return `<span class="fix-venue ${cls}">${venue}</span>`;
   }
 
+  const RESULT_CODES = {
+    W: { cls: 'win', label: 'Win' },
+    L: { cls: 'loss', label: 'Loss' },
+    D: { cls: 'draw', label: 'Draw' }
+  };
+
   function resultCell(result) {
     if (!result) return `<span class="fix-result tbd">TBC</span>`;
+    const code = String(result).trim().toUpperCase();
+    if (RESULT_CODES[code]) {
+      const outcome = RESULT_CODES[code];
+      return `<span class="fix-result ${outcome.cls}">${outcome.label}</span>`;
+    }
     const parts = result.split('-').map(Number);
     if (parts[0] > parts[1]) return `<span class="fix-result win">${result}</span>`;
     if (parts[0] < parts[1]) return `<span class="fix-result loss">${result}</span>`;

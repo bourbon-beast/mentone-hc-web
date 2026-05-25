@@ -48,6 +48,21 @@ def fetch_soup(url: str) -> BeautifulSoup:
 
 # ── Parsing ───────────────────────────────────────────────────────────────────
 
+class ScrapeError(RuntimeError):
+    """Raised when a configured source cannot safely produce fixture data."""
+
+
+def normalise_space(value: str) -> str:
+    return re.sub(r"\s+", " ", value).strip()
+
+
+def page_heading(soup: BeautifulSoup) -> str:
+    heading = soup.find("h2")
+    if heading:
+        return normalise_space(heading.get_text(" ", strip=True))
+    return normalise_space(soup.get_text(" ", strip=True))
+
+
 def clean_opponent(raw: str) -> str:
     """Strip competition prefix: 'Mens PL - 2026 Doncaster HC' → 'Doncaster HC'"""
     m = re.search(r" - 20\d\d (.+)$", raw)
@@ -105,7 +120,7 @@ def determine_result(block: str, status: str) -> str | None:
     return {"Win": "W", "Loss": "L", "Draw": "D"}.get(m.group(1))
 
 
-def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
+def parse_team_page(team_url: str, grade_label: str, expected_title: str | None = None) -> list[dict]:
     """
     Scrape one HV team page and return a list of fixture dicts matching the
     fixtures.json schema:
@@ -115,8 +130,13 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
     try:
         soup = fetch_soup(team_url)
     except Exception as exc:
-        print(f"    WARNING: could not fetch page — {exc}", file=sys.stderr)
-        return []
+        raise ScrapeError(f"{grade_label}: could not fetch {team_url}: {exc}") from exc
+
+    heading = page_heading(soup)
+    if expected_title and expected_title not in heading:
+        raise ScrapeError(
+            f"{grade_label}: expected page title containing {expected_title!r}, got {heading!r}"
+        )
 
     fixtures = []
     seen_rounds: set[int] = set()
@@ -169,6 +189,11 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
         status = "played" if "Played" in block else "upcoming"
         result = determine_result(block, status)
 
+        if not all([date_iso, day_str, time_raw, opponent]):
+            raise ScrapeError(
+                f"{grade_label}: round {round_num} missing date/time/opponent on {team_url}"
+            )
+
         fixtures.append({
             "date":     date_iso,
             "day":      day_str,
@@ -179,6 +204,8 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
         })
 
     fixtures.sort(key=lambda f: f["date"] or "")
+    if not fixtures:
+        raise ScrapeError(f"{grade_label}: no fixtures found on {team_url}")
     return fixtures
 
 
@@ -191,7 +218,11 @@ def build_fixtures_json(config: dict) -> dict:
         grades_out = []
         print(f"\n[{section['label']}]")
         for grade_cfg in section["grades"]:
-            fixtures = parse_team_page(grade_cfg["team_url"], grade_cfg["grade"])
+            fixtures = parse_team_page(
+                grade_cfg["team_url"],
+                grade_cfg["grade"],
+                grade_cfg.get("expected_title"),
+            )
             grades_out.append({
                 "grade":    grade_cfg["grade"],
                 "fixtures": fixtures,
@@ -226,7 +257,11 @@ def main() -> None:
         config = json.load(fh)
 
     print(f"Scraping fixtures for {config.get('season', 'unknown')} season …")
-    result = build_fixtures_json(config)
+    try:
+        result = build_fixtures_json(config)
+    except ScrapeError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        sys.exit(1)
 
     if args.dry_run:
         print("\n── fixtures.json (dry run) ──────────────────────────")
