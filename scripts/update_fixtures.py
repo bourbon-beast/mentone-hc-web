@@ -23,6 +23,35 @@ from pathlib import Path
 import requests
 from bs4 import BeautifulSoup
 
+# ── Validation ────────────────────────────────────────────────────────────────
+
+
+class PageValidationError(RuntimeError):
+    """Raised when a configured Hockey Victoria page is not the expected team."""
+
+
+def normalise_space(value: str) -> str:
+    return re.sub(r"\s+", " ", value).strip()
+
+
+def page_heading(soup: BeautifulSoup) -> str:
+    for heading in soup.find_all(["h1", "h2", "h3"]):
+        text = normalise_space(heading.get_text(" ", strip=True))
+        if text:
+            return text
+    return ""
+
+
+def validate_team_page(soup: BeautifulSoup, expected_title: str | None, grade_label: str) -> None:
+    if not expected_title:
+        return
+
+    actual_title = page_heading(soup)
+    if actual_title != expected_title:
+        raise PageValidationError(
+            f"{grade_label}: expected source title {expected_title!r}, got {actual_title!r}"
+        )
+
 # ── Paths ─────────────────────────────────────────────────────────────────────
 
 SCRIPT_DIR  = Path(__file__).parent
@@ -105,18 +134,15 @@ def determine_result(block: str, status: str) -> str | None:
     return {"Win": "W", "Loss": "L", "Draw": "D"}.get(m.group(1))
 
 
-def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
+def parse_team_page(team_url: str, grade_label: str, expected_title: str | None = None) -> list[dict]:
     """
     Scrape one HV team page and return a list of fixture dicts matching the
     fixtures.json schema:
         { date, day, time, opponent, venue, result }
     """
     print(f"  Fetching {grade_label} … {team_url}", flush=True)
-    try:
-        soup = fetch_soup(team_url)
-    except Exception as exc:
-        print(f"    WARNING: could not fetch page — {exc}", file=sys.stderr)
-        return []
+    soup = fetch_soup(team_url)
+    validate_team_page(soup, expected_title, grade_label)
 
     fixtures = []
     seen_rounds: set[int] = set()
@@ -179,6 +205,8 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
         })
 
     fixtures.sort(key=lambda f: f["date"] or "")
+    if not fixtures:
+        raise PageValidationError(f"{grade_label}: no fixtures found at {team_url}")
     return fixtures
 
 
@@ -191,7 +219,11 @@ def build_fixtures_json(config: dict) -> dict:
         grades_out = []
         print(f"\n[{section['label']}]")
         for grade_cfg in section["grades"]:
-            fixtures = parse_team_page(grade_cfg["team_url"], grade_cfg["grade"])
+            fixtures = parse_team_page(
+                grade_cfg["team_url"],
+                grade_cfg["grade"],
+                grade_cfg.get("expected_title"),
+            )
             grades_out.append({
                 "grade":    grade_cfg["grade"],
                 "fixtures": fixtures,
