@@ -40,10 +40,20 @@ HEADERS = {
 }
 
 
+class FixtureScrapeError(RuntimeError):
+    """Raised when scraped fixture data cannot be trusted."""
+
+
 def fetch_soup(url: str) -> BeautifulSoup:
     resp = requests.get(url, headers=HEADERS, timeout=30)
     resp.raise_for_status()
-    return BeautifulSoup(resp.text, "html.parser")
+    if not resp.text.strip():
+        raise FixtureScrapeError(f"empty response from {url}")
+
+    soup = BeautifulSoup(resp.text, "html.parser")
+    if not soup.get_text(" ", strip=True):
+        raise FixtureScrapeError(f"no readable fixture content at {url}")
+    return soup
 
 
 # ── Parsing ───────────────────────────────────────────────────────────────────
@@ -105,7 +115,11 @@ def determine_result(block: str, status: str) -> str | None:
     return {"Win": "W", "Loss": "L", "Draw": "D"}.get(m.group(1))
 
 
-def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
+def parse_team_page(
+    team_url: str,
+    grade_label: str,
+    expected_title: str | None = None,
+) -> list[dict]:
     """
     Scrape one HV team page and return a list of fixture dicts matching the
     fixtures.json schema:
@@ -115,8 +129,15 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
     try:
         soup = fetch_soup(team_url)
     except Exception as exc:
-        print(f"    WARNING: could not fetch page — {exc}", file=sys.stderr)
-        return []
+        raise FixtureScrapeError(f"could not fetch {grade_label}: {exc}") from exc
+
+    if expected_title:
+        page_text = soup.get_text(" ", strip=True)
+        if expected_title not in page_text:
+            raise FixtureScrapeError(
+                f"{grade_label} source title mismatch: expected "
+                f"{expected_title!r} at {team_url}"
+            )
 
     fixtures = []
     seen_rounds: set[int] = set()
@@ -191,7 +212,16 @@ def build_fixtures_json(config: dict) -> dict:
         grades_out = []
         print(f"\n[{section['label']}]")
         for grade_cfg in section["grades"]:
-            fixtures = parse_team_page(grade_cfg["team_url"], grade_cfg["grade"])
+            fixtures = parse_team_page(
+                grade_cfg["team_url"],
+                grade_cfg["grade"],
+                grade_cfg.get("expected_title"),
+            )
+            if not fixtures and not grade_cfg.get("allow_empty", False):
+                raise FixtureScrapeError(
+                    f"no fixtures parsed for {section['label']} / "
+                    f"{grade_cfg['grade']}; refusing to write empty grade"
+                )
             grades_out.append({
                 "grade":    grade_cfg["grade"],
                 "fixtures": fixtures,
@@ -226,7 +256,11 @@ def main() -> None:
         config = json.load(fh)
 
     print(f"Scraping fixtures for {config.get('season', 'unknown')} season …")
-    result = build_fixtures_json(config)
+    try:
+        result = build_fixtures_json(config)
+    except FixtureScrapeError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        sys.exit(1)
 
     if args.dry_run:
         print("\n── fixtures.json (dry run) ──────────────────────────")
