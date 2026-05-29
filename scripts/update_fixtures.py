@@ -55,7 +55,16 @@ def fetch_soup(url: str) -> BeautifulSoup:
 def clean_opponent(raw: str) -> str:
     """Strip competition prefix: 'Mens PL - 2026 Doncaster HC' → 'Doncaster HC'"""
     m = re.search(r" - 20\d\d (.+)$", raw)
-    return m.group(1).strip() if m else raw.strip()
+    if m:
+        return m.group(1).strip()
+
+    midweek = re.search(
+        r"^20\d\d\s+Midweek\s+(?:Monday\s+)?"
+        r"(?:Men's|Mens|Women's|Womens)\s+"
+        r"(?:Open\s+)?(?:\d+\+\s+)?(?:[A-Z]+\s+){1,3}(.+)$",
+        raw,
+    )
+    return midweek.group(1).strip() if midweek else raw.strip()
 
 
 def parse_hv_date(date_str: str) -> tuple[str, str] | tuple[None, None]:
@@ -156,18 +165,22 @@ def parse_team_page(
 
         # Walk up until we have both a /venues/ link and a /games/team/ link
         container = b_tag.find_parent()
+        found_match_container = False
         for _ in range(12):
             if container is None:
                 break
             if (container.find("a", href=re.compile(r"/venues/")) and
                     container.find("a", href=re.compile(r"/games/team/"))):
+                found_match_container = True
                 break
             container = container.find_parent()
 
-        if container is None:
+        if container is None or not found_match_container:
             continue
 
         block = container.get_text(separator="\n", strip=True)
+        if len(re.findall(r"\bRound\s+\d+\b", block)) != 1:
+            continue
 
         # Date + time
         dm = re.search(
