@@ -30,6 +30,10 @@ REPO_ROOT   = SCRIPT_DIR.parent
 CONFIG_FILE = SCRIPT_DIR / "mentone_teams_2026.json"
 OUTPUT_FILE = REPO_ROOT / "fixtures.json"
 
+
+class FixtureSourceError(RuntimeError):
+    """Raised when a configured Hockey Victoria source is missing or wrong."""
+
 # ── HTTP ──────────────────────────────────────────────────────────────────────
 
 HEADERS = {
@@ -105,7 +109,24 @@ def determine_result(block: str, status: str) -> str | None:
     return {"Win": "W", "Loss": "L", "Draw": "D"}.get(m.group(1))
 
 
-def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
+def normalise_text(value: str) -> str:
+    return re.sub(r"\s+", " ", value).strip()
+
+
+def validate_expected_title(soup: BeautifulSoup, expected_title: str, grade_label: str) -> None:
+    page_text = normalise_text(soup.get_text(separator=" ", strip=True))
+    expected = normalise_text(expected_title)
+    if expected not in page_text:
+        raise FixtureSourceError(
+            f"{grade_label}: expected source title {expected!r} was not found"
+        )
+
+
+def parse_team_page(
+    team_url: str,
+    grade_label: str,
+    expected_title: str | None = None,
+) -> list[dict]:
     """
     Scrape one HV team page and return a list of fixture dicts matching the
     fixtures.json schema:
@@ -115,8 +136,10 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
     try:
         soup = fetch_soup(team_url)
     except Exception as exc:
-        print(f"    WARNING: could not fetch page — {exc}", file=sys.stderr)
-        return []
+        raise FixtureSourceError(f"{grade_label}: could not fetch page — {exc}") from exc
+
+    if expected_title:
+        validate_expected_title(soup, expected_title, grade_label)
 
     fixtures = []
     seen_rounds: set[int] = set()
@@ -179,6 +202,8 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
         })
 
     fixtures.sort(key=lambda f: f["date"] or "")
+    if not fixtures:
+        raise FixtureSourceError(f"{grade_label}: no fixtures parsed from source page")
     return fixtures
 
 
@@ -191,7 +216,11 @@ def build_fixtures_json(config: dict) -> dict:
         grades_out = []
         print(f"\n[{section['label']}]")
         for grade_cfg in section["grades"]:
-            fixtures = parse_team_page(grade_cfg["team_url"], grade_cfg["grade"])
+            fixtures = parse_team_page(
+                grade_cfg["team_url"],
+                grade_cfg["grade"],
+                grade_cfg.get("expected_title"),
+            )
             grades_out.append({
                 "grade":    grade_cfg["grade"],
                 "fixtures": fixtures,
