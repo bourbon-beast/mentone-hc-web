@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-29",
+  "updated": "2026-05-30",
   "sections": [
     {
       "id": "mens",
@@ -550,7 +550,7 @@
               "time": "5:00pm",
               "opponent": "Brunswick Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "D"
             },
             {
               "date": "2026-06-13",
@@ -691,7 +691,7 @@
               "time": "3:30pm",
               "opponent": "MCC Hockey Section",
               "venue": "Away",
-              "result": null
+              "result": "D"
             },
             {
               "date": "2026-06-14",
@@ -1310,7 +1310,7 @@
               "time": "2:00pm",
               "opponent": "Hawthorn Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-14",
@@ -1749,7 +1749,7 @@
               "time": "12:30pm",
               "opponent": "Frankston Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-06-14",
@@ -1881,7 +1881,7 @@
               "time": "8:45pm",
               "opponent": "Hawthorn Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-12",
@@ -1990,7 +1990,7 @@
               "time": "8:20pm",
               "opponent": "Southern United Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "D"
             },
             {
               "date": "2026-06-12",
@@ -2184,7 +2184,7 @@
               "time": "10:00am",
               "opponent": "Mornington Peninsula Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-06-13",
