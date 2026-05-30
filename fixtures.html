@@ -252,6 +252,9 @@
 
   function resultCell(result) {
     if (!result) return `<span class="fix-result tbd">TBC</span>`;
+    if (result === 'W') return `<span class="fix-result win">W</span>`;
+    if (result === 'L') return `<span class="fix-result loss">L</span>`;
+    if (result === 'D') return `<span class="fix-result draw">D</span>`;
     const parts = result.split('-').map(Number);
     if (parts[0] > parts[1]) return `<span class="fix-result win">${result}</span>`;
     if (parts[0] < parts[1]) return `<span class="fix-result loss">${result}</span>`;
