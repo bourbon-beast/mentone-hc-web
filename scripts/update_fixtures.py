@@ -30,6 +30,10 @@ REPO_ROOT   = SCRIPT_DIR.parent
 CONFIG_FILE = SCRIPT_DIR / "mentone_teams_2026.json"
 OUTPUT_FILE = REPO_ROOT / "fixtures.json"
 
+
+class FixtureSourceError(RuntimeError):
+    """Raised when a configured Hockey Victoria source is missing or wrong."""
+
 # ── HTTP ──────────────────────────────────────────────────────────────────────
 
 HEADERS = {
@@ -51,7 +55,16 @@ def fetch_soup(url: str) -> BeautifulSoup:
 def clean_opponent(raw: str) -> str:
     """Strip competition prefix: 'Mens PL - 2026 Doncaster HC' → 'Doncaster HC'"""
     m = re.search(r" - 20\d\d (.+)$", raw)
-    return m.group(1).strip() if m else raw.strip()
+    if m:
+        return m.group(1).strip()
+
+    midweek = re.search(
+        r"^20\d\d\s+Midweek\s+(?:Monday\s+)?"
+        r"(?:Men's|Mens|Women's|Womens)\s+"
+        r"(?:Open\s+)?(?:\d+\+\s+)?(?:[A-Z]+\s+){1,3}(.+)$",
+        raw,
+    )
+    return midweek.group(1).strip() if midweek else raw.strip()
 
 
 def parse_hv_date(date_str: str) -> tuple[str, str] | tuple[None, None]:
@@ -105,7 +118,24 @@ def determine_result(block: str, status: str) -> str | None:
     return {"Win": "W", "Loss": "L", "Draw": "D"}.get(m.group(1))
 
 
-def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
+def normalise_text(value: str) -> str:
+    return re.sub(r"\s+", " ", value).strip()
+
+
+def validate_expected_title(soup: BeautifulSoup, expected_title: str, grade_label: str) -> None:
+    page_text = normalise_text(soup.get_text(separator=" ", strip=True))
+    expected = normalise_text(expected_title)
+    if expected not in page_text:
+        raise FixtureSourceError(
+            f"{grade_label}: expected source title {expected!r} was not found"
+        )
+
+
+def parse_team_page(
+    team_url: str,
+    grade_label: str,
+    expected_title: str | None = None,
+) -> list[dict]:
     """
     Scrape one HV team page and return a list of fixture dicts matching the
     fixtures.json schema:
@@ -115,8 +145,10 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
     try:
         soup = fetch_soup(team_url)
     except Exception as exc:
-        print(f"    WARNING: could not fetch page — {exc}", file=sys.stderr)
-        return []
+        raise FixtureSourceError(f"{grade_label}: could not fetch page — {exc}") from exc
+
+    if expected_title:
+        validate_expected_title(soup, expected_title, grade_label)
 
     fixtures = []
     seen_rounds: set[int] = set()
@@ -133,18 +165,22 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
 
         # Walk up until we have both a /venues/ link and a /games/team/ link
         container = b_tag.find_parent()
+        found_match_container = False
         for _ in range(12):
             if container is None:
                 break
             if (container.find("a", href=re.compile(r"/venues/")) and
                     container.find("a", href=re.compile(r"/games/team/"))):
+                found_match_container = True
                 break
             container = container.find_parent()
 
-        if container is None:
+        if container is None or not found_match_container:
             continue
 
         block = container.get_text(separator="\n", strip=True)
+        if len(re.findall(r"\bRound\s+\d+\b", block)) != 1:
+            continue
 
         # Date + time
         dm = re.search(
@@ -179,6 +215,8 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
         })
 
     fixtures.sort(key=lambda f: f["date"] or "")
+    if not fixtures:
+        raise FixtureSourceError(f"{grade_label}: no fixtures parsed from source page")
     return fixtures
 
 
@@ -191,7 +229,11 @@ def build_fixtures_json(config: dict) -> dict:
         grades_out = []
         print(f"\n[{section['label']}]")
         for grade_cfg in section["grades"]:
-            fixtures = parse_team_page(grade_cfg["team_url"], grade_cfg["grade"])
+            fixtures = parse_team_page(
+                grade_cfg["team_url"],
+                grade_cfg["grade"],
+                grade_cfg.get("expected_title"),
+            )
             grades_out.append({
                 "grade":    grade_cfg["grade"],
                 "fixtures": fixtures,
