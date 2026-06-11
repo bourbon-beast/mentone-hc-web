@@ -219,7 +219,7 @@
     return `<div class="news-filters">
       ${CATEGORIES.map(c => `
         <button class="news-filter-btn${c === activeCategory ? ' active' : ''}"
-          onclick="filterNews('${c}')">${c}</button>`).join('')}
+          data-category="${c}">${c}</button>`).join('')}
     </div>`;
   }
 
@@ -230,6 +230,12 @@
     currentFilter = cat;
     renderNews();
   };
+
+  document.getElementById('news-content').addEventListener('click', (event) => {
+    const button = event.target.closest('.news-filter-btn');
+    if (!button) return;
+    filterNews(button.dataset.category);
+  });
 
   window.showArticle = function(id) {
     const a = allArticles.find(x => x.id === id);
