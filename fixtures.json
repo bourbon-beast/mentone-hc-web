@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-09",
+  "updated": "2026-06-16",
   "sections": [
     {
       "id": "mens",
@@ -103,7 +103,7 @@
               "time": "2:00pm",
               "opponent": "Greensborough Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-21",
@@ -260,7 +260,7 @@
               "time": "12:30pm",
               "opponent": "Greensborough Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-21",
@@ -409,7 +409,7 @@
               "time": "3:30pm",
               "opponent": "PEGS Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-06-21",
@@ -558,7 +558,7 @@
               "time": "12:30pm",
               "opponent": "Greensborough Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-21",
@@ -715,7 +715,7 @@
               "time": "6:30pm",
               "opponent": "Doncaster Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-06-20",
@@ -856,7 +856,7 @@
               "time": "11:00am",
               "opponent": "Frankston Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-20",
@@ -1016,7 +1016,7 @@
               "time": "6:30pm",
               "opponent": "Camberwell Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-21",
@@ -1165,7 +1165,7 @@
               "time": "5:00pm",
               "opponent": "Bayside Powerhouse Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-06-20",
@@ -1314,7 +1314,7 @@
               "time": "5:00pm",
               "opponent": "Greensborough Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-06-21",
@@ -1463,7 +1463,7 @@
               "time": "12:30pm",
               "opponent": "Melbourne Razorbacks Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "D"
             },
             {
               "date": "2026-06-21",
@@ -1612,7 +1612,7 @@
               "time": "3:00pm",
               "opponent": "Old Haileyburians' Association Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "D"
             },
             {
               "date": "2026-06-21",
@@ -1776,7 +1776,7 @@
               "time": "3:30pm",
               "opponent": "KBH Brumbies Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-20",
@@ -1917,7 +1917,7 @@
               "time": "12:30pm",
               "opponent": "Frankston Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-20",
@@ -2074,7 +2074,7 @@
               "time": "5:00pm",
               "opponent": "WestVic Hockey",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-20",
@@ -2371,7 +2371,7 @@
               "time": "12:30pm",
               "opponent": "Hawthorn Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-06-20",
@@ -2520,7 +2520,7 @@
               "time": "2:00pm",
               "opponent": "Eastern Christian Hockey Organisation (ECHO)",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-06-20",
@@ -2669,7 +2669,7 @@
               "time": "2:00pm",
               "opponent": "Croydon Ranges Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-06-20",
@@ -2826,7 +2826,7 @@
               "time": "11:30am",
               "opponent": "Camberwell Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-21",
