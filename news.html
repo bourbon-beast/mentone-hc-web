@@ -219,7 +219,7 @@
     return `<div class="news-filters">
       ${CATEGORIES.map(c => `
         <button class="news-filter-btn${c === activeCategory ? ' active' : ''}"
-          onclick="filterNews('${c}')">${c}</button>`).join('')}
+          data-category="${c}">${c}</button>`).join('')}
     </div>`;
   }
 
@@ -268,7 +268,11 @@
     }
 
     html += `<div style="font-size:12px;color:var(--muted);margin-top:48px;padding-top:24px;border-top:1px solid var(--line-light);">Last updated: ${window._newsUpdated || ''}</div>`;
-    document.getElementById('news-content').innerHTML = html;
+    const contentEl = document.getElementById('news-content');
+    contentEl.innerHTML = html;
+    contentEl.querySelectorAll('.news-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => filterNews(btn.dataset.category));
+    });
   }
 
   fetch('news.json')
