@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-16",
+  "updated": "2026-06-23",
   "sections": [
     {
       "id": "mens",
@@ -111,7 +111,7 @@
               "time": "3:30pm",
               "opponent": "Doncaster Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-27",
@@ -268,7 +268,7 @@
               "time": "5:00pm",
               "opponent": "Doncaster Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-27",
@@ -417,7 +417,7 @@
               "time": "3:00pm",
               "opponent": "Melbourne University Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-06-27",
@@ -566,7 +566,7 @@
               "time": "1:30pm",
               "opponent": "Melbourne University Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-27",
@@ -723,7 +723,7 @@
               "time": "5:00pm",
               "opponent": "KBH Brumbies Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "D"
             },
             {
               "date": "2026-06-27",
@@ -864,7 +864,7 @@
               "time": "6:30pm",
               "opponent": "Southern United Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-06-28",
@@ -1024,7 +1024,7 @@
               "time": "11:00am",
               "opponent": "Doncaster Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "D"
             },
             {
               "date": "2026-06-27",
@@ -1173,7 +1173,7 @@
               "time": "1:30pm",
               "opponent": "Old Haileyburians' Association Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-06-28",
@@ -1322,7 +1322,7 @@
               "time": "12:30pm",
               "opponent": "Doncaster Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-06-27",
@@ -1471,7 +1471,7 @@
               "time": "12:30pm",
               "opponent": "Frankston Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-28",
@@ -1620,7 +1620,7 @@
               "time": "2:00pm",
               "opponent": "Frankston Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-06-28",
@@ -1784,7 +1784,7 @@
               "time": "3:30pm",
               "opponent": "Old Carey Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-06-27",
@@ -1925,7 +1925,7 @@
               "time": "5:00pm",
               "opponent": "Knox Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-27",
@@ -2082,7 +2082,7 @@
               "time": "11:00am",
               "opponent": "Casey Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-27",
@@ -2231,7 +2231,7 @@
               "time": "3:30pm",
               "opponent": "Mornington Peninsula Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-28",
@@ -2379,7 +2379,7 @@
               "time": "1:30pm",
               "opponent": "Mentone Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-27",
@@ -2528,7 +2528,7 @@
               "time": "2:00pm",
               "opponent": "Old Xaverians Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "D"
             },
             {
               "date": "2026-06-28",
@@ -2677,7 +2677,7 @@
               "time": "2:00pm",
               "opponent": "Toorak East Malvern Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-06-27",
@@ -2834,7 +2834,7 @@
               "time": "11:00am",
               "opponent": "KBH Brumbies Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-07-12",
