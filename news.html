@@ -219,7 +219,7 @@
     return `<div class="news-filters">
       ${CATEGORIES.map(c => `
         <button class="news-filter-btn${c === activeCategory ? ' active' : ''}"
-          onclick="filterNews('${c}')">${c}</button>`).join('')}
+          type="button" data-category="${c}">${c}</button>`).join('')}
     </div>`;
   }
 
@@ -230,6 +230,12 @@
     currentFilter = cat;
     renderNews();
   };
+
+  function bindFilterButtons() {
+    document.querySelectorAll('.news-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => filterNews(btn.dataset.category));
+    });
+  }
 
   window.showArticle = function(id) {
     const a = allArticles.find(x => x.id === id);
@@ -269,6 +275,7 @@
 
     html += `<div style="font-size:12px;color:var(--muted);margin-top:48px;padding-top:24px;border-top:1px solid var(--line-light);">Last updated: ${window._newsUpdated || ''}</div>`;
     document.getElementById('news-content').innerHTML = html;
+    bindFilterButtons();
   }
 
   fetch('news.json')
