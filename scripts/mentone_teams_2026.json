@@ -7,12 +7,36 @@
       "label": "Men's",
       "color": "yellow",
       "grades": [
-        { "grade": "Premier League", "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/409898" },
-        { "grade": "PLR",            "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412426" },
-        { "grade": "Pennant B",      "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412423" },
-        { "grade": "Pennant C",      "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412424" },
-        { "grade": "Pennant E",      "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412425" },
-        { "grade": "Metro",          "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412422" }
+        {
+          "grade": "Premier League",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/409898",
+          "expected_title": "2026 Senior Competition \u00b7 Mens Premier League - 2026 Mentone Hockey Club"
+        },
+        {
+          "grade": "PLR",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412426",
+          "expected_title": "2026 Senior Competition \u00b7 Mens Premier League Reserves - 2026 Mentone Hockey Club"
+        },
+        {
+          "grade": "Pennant B",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412423",
+          "expected_title": "2026 Senior Competition \u00b7 Mens Pennant B - 2026 Mentone Hockey Club"
+        },
+        {
+          "grade": "Pennant C",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412424",
+          "expected_title": "2026 Senior Competition \u00b7 Mens Pennant C - 2026 Mentone Hockey Club"
+        },
+        {
+          "grade": "Pennant E",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412425",
+          "expected_title": "2026 Senior Competition \u00b7 Mens Pennant E South East - 2026 Mentone Hockey Club"
+        },
+        {
+          "grade": "Metro",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412422",
+          "expected_title": "2026 Senior Competition \u00b7 Mens Metro 2 South - 2026 Mentone Hockey Club"
+        }
       ]
     },
     {
@@ -20,12 +44,36 @@
       "label": "Women's",
       "color": "blue",
       "grades": [
-        { "grade": "Premier League", "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/409832" },
-        { "grade": "PLR",            "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412429" },
-        { "grade": "Pennant A",      "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412430" },
-        { "grade": "Pennant B",      "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412431" },
-        { "grade": "Pennant D",      "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412432" },
-        { "grade": "Metro",          "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412433" }
+        {
+          "grade": "Premier League",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/409899",
+          "expected_title": "2026 Senior Competition \u00b7 Womens Premier League - 2026 Mentone Hockey Club"
+        },
+        {
+          "grade": "PLR",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412431",
+          "expected_title": "2026 Senior Competition \u00b7 Womens Premier League Reserves - 2026 Mentone Hockey Club"
+        },
+        {
+          "grade": "Pennant A",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412428",
+          "expected_title": "2026 Senior Competition \u00b7 Womens Pennant A - 2026 Mentone Hockey Club"
+        },
+        {
+          "grade": "Pennant B",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412429",
+          "expected_title": "2026 Senior Competition \u00b7 Womens Pennant B - 2026 Mentone Hockey Club"
+        },
+        {
+          "grade": "Pennant D",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412430",
+          "expected_title": "2026 Senior Competition \u00b7 Womens Pennant D South East - 2026 Mentone Hockey Club"
+        },
+        {
+          "grade": "Metro",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412427",
+          "expected_title": "2026 Senior Competition \u00b7 Womens Metro 1 South - 2026 Mentone Hockey Club"
+        }
       ]
     },
     {
@@ -33,10 +81,26 @@
       "label": "Juniors",
       "color": "yellow",
       "grades": [
-        { "grade": "U18 Boys",  "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412441" },
-        { "grade": "U16 Boys",  "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412443" },
-        { "grade": "U14 Boys",  "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412445" },
-        { "grade": "U12 Mixed", "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412447" }
+        {
+          "grade": "U18 Mixed",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/26323/418103",
+          "expected_title": "2026 Junior Competition \u00b7 U18 Mixed District SE - 2026 Mentone Hockey Club"
+        },
+        {
+          "grade": "U16 Boys",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/26323/418102",
+          "expected_title": "2026 Junior Competition \u00b7 U16 Boys Shield - 2026 Mentone Hockey Club"
+        },
+        {
+          "grade": "U14 Boys",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/26323/418101",
+          "expected_title": "2026 Junior Competition \u00b7 U14 Boys Pennant SE - 2026 Mentone Hockey Club"
+        },
+        {
+          "grade": "U12 Mixed",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/26323/418097",
+          "expected_title": "2026 Junior Competition \u00b7 U12 Mixed Pennant SE - 2026 Mentone Hockey Club"
+        }
       ]
     },
     {
@@ -44,10 +108,21 @@
       "label": "Masters",
       "color": "blue",
       "grades": [
-        { "grade": "Men's O40B",  "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412450" },
-        { "grade": "Men's O40C",  "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412451" },
-        { "grade": "Men's O50",   "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412452" },
-        { "grade": "Women's O45", "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412455" }
+        {
+          "grade": "Men's 40+ BSE",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/26185/416550",
+          "expected_title": "2026 Midweek Competition \u00b7 2026 Midweek Men's 40+ BSE Mentone Hockey Club"
+        },
+        {
+          "grade": "Men's 40+ DSE",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/26185/416551",
+          "expected_title": "2026 Midweek Competition \u00b7 2026 Midweek Men's 40+ DSE Mentone Hockey Club"
+        },
+        {
+          "grade": "Women's 35+ A SE",
+          "team_url": "https://www.hockeyvictoria.org.au/games/team/26185/416552",
+          "expected_title": "2026 Midweek Competition \u00b7 2026 Midweek Women's 35+ A SE Mentone Hockey Club"
+        }
       ]
     }
   ]
