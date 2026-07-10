@@ -1,0 +1,657 @@
+/*
+Theme Name: Mentone Hockey Club
+Theme URI: https://mentonehockey.org.au
+Author: Mentone Hockey Club
+Description: Custom block theme for Mentone Hockey Club — warm, editorial, sports-journal aesthetic. Navy / powder blue / yellow palette, Fraunces display type, Inter body. All design tokens live in theme.json; this file carries only the behaviours theme.json cannot express.
+Version: 0.3.5
+Requires at least: 6.6
+Tested up to: 7.0
+Requires PHP: 8.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: mentone
+*/
+
+/* ==========================================================================
+   Behaviours theme.json can't express.
+   Tokens (colors, type, spacing) belong in theme.json — do not add them here.
+   ========================================================================== */
+
+/* The static design's CSS (ported below) was written against border-box;
+   WP core only sets it on some blocks. Zero-specificity so any block rule wins.
+   (Pseudo-elements can't go inside :where — keep them as a separate rule.) */
+:where(*) { box-sizing: border-box; }
+::before, ::after { box-sizing: border-box; }
+
+/* ---------- Links in running text: yellow underline, never the whole word ---------- */
+.entry-content p a,
+.entry-content li a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--wp--preset--color--yellow);
+  padding-bottom: 2px;
+  transition: border-color 0.2s ease;
+}
+.entry-content p a:hover,
+.entry-content li a:hover {
+  border-bottom-color: var(--wp--preset--color--yellow-deep);
+}
+
+/* ---------- Italic brand emphasis inside display headings ---------- */
+h1 em, h2 em, .wp-block-heading em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--wp--preset--color--yellow-deep);
+}
+
+/* ---------- Eyebrow (uppercase micro-label above headings) ---------- */
+.eyebrow {
+  display: inline-block;
+  font-family: var(--wp--preset--font-family--inter);
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--yellow-deep);
+  font-weight: 600;
+}
+.has-navy-background-color .eyebrow,
+.has-navy-deep-background-color .eyebrow {
+  color: var(--wp--preset--color--yellow-bright);
+}
+
+/* ---------- Micro label (stat captions, tags) ---------- */
+.label-micro {
+  font-family: var(--wp--preset--font-family--inter);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* ---------- Tabular numerals for fixtures / stats ---------- */
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* ---------- Card hover: calm 4px lift, navy-tinted shadow ---------- */
+.mentone-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.mentone-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--wp--custom--shadow--md);
+}
+
+/* ---------- Buttons: 1px lift on hover, no bounce ---------- */
+.wp-block-button__link {
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.wp-block-button__link:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--wp--custom--shadow--sm);
+}
+
+/* ---------- Navigation: yellow 2px underline reveal ---------- */
+.wp-block-navigation .wp-block-navigation-item__content {
+  position: relative;
+  text-decoration: none;
+}
+.wp-block-navigation .wp-block-navigation-item__content::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -4px;
+  height: 2px;
+  background: var(--wp--preset--color--yellow);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.wp-block-navigation .wp-block-navigation-item__content:hover::after,
+.wp-block-navigation .current-menu-item .wp-block-navigation-item__content::after {
+  transform: scaleX(1);
+}
+
+/* ---------- Hero navy panel: faint pitch-line stripes + blue glow ---------- */
+.mentone-hero-navy {
+  background-color: var(--wp--preset--color--navy);
+  background-image:
+    radial-gradient(ellipse at top right, rgba(125, 161, 196, 0.25), transparent 55%),
+    repeating-linear-gradient(90deg, rgba(246, 241, 230, 0.03) 0 1px, transparent 1px 120px);
+}
+
+/* ---------- Acknowledgement of Country: italic, reverent, never decorated ---------- */
+.acknowledgement {
+  font-style: italic;
+  opacity: 0.75;
+  max-width: 640px;
+}
+
+/* ==========================================================================
+   Legacy token aliases — the component CSS below is ported from the static
+   site's site.css and speaks the old variable names. Everything still
+   resolves to theme.json presets; change tokens there, not here.
+   ========================================================================== */
+:root {
+  --navy: var(--wp--preset--color--navy);
+  --navy-soft: var(--wp--preset--color--navy-soft);
+  --navy-deep: var(--wp--preset--color--navy-deep);
+  --blue: var(--wp--preset--color--blue);
+  --blue-soft: var(--wp--preset--color--blue-soft);
+  --blue-wash: var(--wp--preset--color--blue-wash);
+  --yellow: var(--wp--preset--color--yellow);
+  --yellow-bright: var(--wp--preset--color--yellow-bright);
+  --yellow-deep: var(--wp--preset--color--yellow-deep);
+  --cream: var(--wp--preset--color--cream);
+  --muted: var(--wp--preset--color--muted);
+  --ink: var(--wp--preset--color--navy);
+  --bg-surface: var(--wp--preset--color--white);
+  --line: var(--wp--custom--line--default);
+  --line-light: var(--wp--custom--line--light);
+  --shadow-sm: var(--wp--custom--shadow--sm);
+  --shadow-md: var(--wp--custom--shadow--md);
+  --shadow-lg: var(--wp--custom--shadow--lg);
+  --radius-md: var(--wp--custom--radius--md);
+  --radius-pill: var(--wp--custom--radius--pill);
+  --display: var(--wp--preset--font-family--fraunces);
+  --body: var(--wp--preset--font-family--inter);
+  /* extra aliases used by club-history.css (honour boards / awards section) */
+  --cream-warm: var(--wp--preset--color--cream-warm);
+  --radius-sm: var(--wp--custom--radius--sm);
+  --space-2: var(--wp--preset--spacing--20);
+  --space-3: var(--wp--preset--spacing--30);
+  --space-4: var(--wp--preset--spacing--40);
+  --space-5: var(--wp--preset--spacing--50);
+  --space-6: var(--wp--preset--spacing--60);
+  --space-7: var(--wp--preset--spacing--70);
+  --space-8: var(--wp--preset--spacing--80);
+  --wrap: var(--wp--style--global--wide-size, 1240px);
+}
+
+/* ---------- Footer columns + links on navy bands ---------- */
+.footer-links { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.footer-links li { font-size: 14px; color: rgba(246, 241, 230, 0.75); }
+.footer-links a { color: rgba(246, 241, 230, 0.75); text-decoration: none; }
+.footer-links a:hover { color: var(--wp--preset--color--yellow-bright); }
+/* default link colour is navy — make links legible on navy bands */
+.has-navy-deep-background-color a:where(:not(.wp-element-button)),
+.has-navy-background-color a:where(:not(.wp-element-button)) { color: var(--wp--preset--color--cream); }
+
+/* ---------- Pattern page template (page-patterns.html) ---------- */
+/* Full-bleed bands butt together — kill the editor block gap between
+   top-level sections regardless of whether post-content honours blockGap:0. */
+.page-template-page-patterns .wp-block-post-content > * { margin-block-start: 0; }
+
+/* ==========================================================================
+   Components ported from site.css (home page sections)
+   ========================================================================== */
+
+/* The head group itself spans the 1240px wrap (layout rules override any
+   max-width on it); cap the text inside so line lengths match the static design. */
+.section-head { margin-bottom: 56px; }
+.section-head .section-title,
+.section-head .section-sub { max-width: 760px; }
+.section-title {
+  font-family: var(--display);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--navy);
+}
+.section-title em { font-style: italic; color: var(--yellow-deep); font-weight: 300; }
+.section-sub { margin-top: 18px; font-size: 17px; color: var(--muted); line-height: 1.6; }
+.eyebrow { margin-bottom: 16px; }
+
+/* ---------- Button styles (block styles registered in functions.php) ---------- */
+.is-style-ghost .wp-block-button__link {
+  background: transparent;
+  color: var(--cream);
+  border: 1px solid rgba(246,241,230,.3);
+}
+.is-style-ghost .wp-block-button__link:hover { border-color: var(--cream); background: rgba(246,241,230,.05); }
+.is-style-navy .wp-block-button__link { background: var(--navy); color: var(--cream); }
+.is-style-navy .wp-block-button__link:hover { background: var(--navy-soft); }
+
+/* ---------- HERO (mascot-led) ---------- */
+.hero {
+  position: relative;
+  background: var(--navy);
+  color: var(--cream);
+  overflow: hidden;
+  isolation: isolate;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(ellipse at 75% 20%, rgba(125,161,196,.25), transparent 55%),
+    radial-gradient(ellipse at 20% 80%, rgba(241,180,52,.10), transparent 50%);
+  pointer-events: none; z-index: 0;
+}
+.hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(90deg, transparent 0, transparent 119px, rgba(246,241,230,.03) 119px, rgba(246,241,230,.03) 120px);
+  pointer-events: none; z-index: 0;
+}
+.hero > * { position: relative; z-index: 2; }
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--yellow-bright); font-weight: 700;
+}
+.hero-tag::before { content: ''; width: 28px; height: 1px; background: var(--yellow); }
+.hero h1 {
+  font-size: clamp(46px, 7vw, 96px);
+  line-height: .96;
+  letter-spacing: -0.03em;
+  color: var(--cream);
+}
+.hero h1 em { font-style: italic; color: var(--yellow-bright); font-weight: 300; }
+.hero .lead { font-size: 19px; line-height: 1.6; color: rgba(246,241,230,.82); max-width: 520px; }
+/* A .lead sitting directly in the constrained hero group gets auto-centred by
+   the layout engine; pin it to the left edge of the 1240px wrap instead.
+   (New pages should wrap hero copy in an align:wide inner group — see the
+   section-hero pattern — which makes this rule a no-op for them.) */
+.hero > .lead { margin-left: max(0px, calc((100% - 1240px) / 2)) !important; margin-right: 0 !important; }
+
+.hero-mascot-stage { position: relative; aspect-ratio: 1/1; display: grid; place-items: center; }
+.hero-mascot-stage::before {
+  content: '';
+  position: absolute; inset: 6%; border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(241,180,52,.22), transparent 62%);
+  filter: blur(10px);
+}
+.hero-mascot-ring {
+  position: absolute; inset: 4%; border-radius: 50%;
+  border: 1px dashed rgba(241,180,52,.35);
+  animation: mentone-spin 60s linear infinite;
+}
+.hero-mascot-ring.inner { inset: 12%; border-color: rgba(125,161,196,.3); animation-direction: reverse; animation-duration: 90s; }
+@keyframes mentone-spin { to { transform: rotate(360deg); } }
+.hero-mascot-img {
+  position: relative; width: 78%; aspect-ratio: 1/1; border-radius: 50%; overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0,0,0,.5), inset 0 0 0 3px rgba(241,180,52,.4);
+  background: var(--navy-deep);
+}
+.hero-mascot-img img { width: 100%; height: 100%; object-fit: cover; }
+.hero-mascot-pin {
+  position: absolute; bottom: 6%; right: -4%;
+  background: var(--yellow); color: var(--navy);
+  padding: 12px 16px; border-radius: 4px; box-shadow: var(--shadow-lg);
+  font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700; z-index: 3;
+}
+.hero-mascot-pin strong { display: block; font-family: var(--display); font-size: 18px; letter-spacing: -.01em; text-transform: none; font-weight: 600; margin-top: 4px; }
+
+/* ---------- Stat strip ---------- */
+.hero-stats, .stat-strip {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid rgba(246,241,230,.15);
+  padding-top: 32px;
+}
+.stat { padding: 0 24px; border-right: 1px solid rgba(246,241,230,.12); }
+.stat:first-child { padding-left: 0; }
+.stat:last-child { border-right: none; padding-right: 0; }
+.stat-num {
+  font-family: var(--display);
+  font-size: 44px; font-weight: 500; color: var(--yellow-bright);
+  line-height: 1; letter-spacing: -.02em;
+}
+.stat-label {
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(246,241,230,.7); margin-top: 10px; font-weight: 600;
+}
+/* Stat strip on light backgrounds */
+.stat-strip-light { border-top-color: var(--line); }
+.stat-strip-light .stat { border-right-color: var(--line); }
+.stat-strip-light .stat-num { color: var(--yellow-deep); }
+.stat-strip-light .stat-label { color: var(--muted); }
+
+/* ---------- Team cards (sections grid) ---------- */
+.sections-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.team-card {
+  position: relative; aspect-ratio: 3/4; border-radius: 4px; overflow: hidden;
+  cursor: pointer; transition: transform .4s ease; background: var(--navy);
+  isolation: isolate; display: block; text-decoration: none;
+}
+.team-card:hover { transform: translateY(-4px); }
+.team-card-bg { position: absolute; inset: 0; transition: transform .6s ease; background-size: cover; background-position: center; }
+.team-card:hover .team-card-bg { transform: scale(1.05); }
+.team-card[data-team="mens"] .team-card-bg { background-image: linear-gradient(135deg,#0d3048,#041C2C); }
+.team-card[data-team="womens"] .team-card-bg { background-image: linear-gradient(135deg,#7DA1C4,#4f7696); }
+.team-card[data-team="juniors"] .team-card-bg { background-image: linear-gradient(135deg,#F1B434,#c89120); }
+.team-card[data-team="masters"] .team-card-bg { background-image: linear-gradient(135deg,#041C2C,#02121c); }
+.team-card-bg::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(2,18,28,.85) 100%);
+}
+.team-card[data-team="juniors"] .team-card-bg::before {
+  background: linear-gradient(180deg, transparent 40%, rgba(4,28,44,.6) 100%);
+}
+.team-card-inner {
+  position: relative; height: 100%; padding: 24px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  color: var(--cream); z-index: 2;
+}
+.team-card[data-team="juniors"] .team-card-inner { color: var(--navy); }
+.team-card-name {
+  font-family: var(--display); font-size: 34px; font-weight: 500;
+  line-height: 1.05; margin-bottom: 6px; letter-spacing: -0.01em;
+}
+.team-count { font-size: 13px; opacity: .8; }
+.team-card-arrow {
+  position: absolute; top: 24px; right: 24px; width: 36px; height: 36px;
+  border-radius: 50%; border: 1px solid rgba(246,241,230,.3);
+  display: grid; place-items: center; transition: all .3s; z-index: 2;
+}
+.team-card[data-team="juniors"] .team-card-arrow { border-color: rgba(4,28,44,.3); }
+.team-card:hover .team-card-arrow { background: var(--yellow); border-color: var(--yellow); color: var(--navy); }
+.team-card-arrow svg { width: 14px; height: 14px; }
+
+/* ---------- This week (navy cards) ---------- */
+.this-week { position: relative; overflow: hidden; }
+.this-week::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--yellow), transparent);
+}
+.this-week .eyebrow { color: var(--yellow-bright); }
+.this-week .section-title { color: var(--cream); }
+.this-week .section-title em { color: var(--yellow-bright); }
+.week-grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 24px; }
+.week-card {
+  background: rgba(246,241,230,.04);
+  border: 1px solid rgba(246,241,230,.1);
+  border-radius: 4px; padding: 32px; transition: all .3s;
+}
+.week-card:hover { background: rgba(246,241,230,.06); border-color: rgba(241,180,52,.4); }
+.week-card-label {
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--yellow-bright); font-weight: 700; margin-bottom: 18px;
+}
+.week-card-title { font-family: var(--display); font-size: 26px; font-weight: 500; line-height: 1.2; margin-bottom: 14px; color: var(--cream); }
+.week-card p { color: rgba(246,241,230,.75); font-size: 15px; line-height: 1.6; margin-bottom: 20px; }
+.fixtures-list { list-style: none; margin: 0; padding: 0; }
+.fixtures-list li {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center;
+  padding: 14px 0; border-bottom: 1px solid rgba(246,241,230,.08); font-size: 14px;
+}
+.fixtures-list li:last-child { border-bottom: none; }
+.fix-day {
+  background: rgba(241,180,52,.15); color: var(--yellow-bright);
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700;
+  padding: 5px 10px; border-radius: 3px; min-width: 48px; text-align: center;
+}
+.fix-teams { color: var(--cream); font-weight: 500; }
+.fix-teams small { display: block; color: rgba(246,241,230,.55); font-size: 12px; font-weight: 400; margin-top: 2px; }
+.fix-time { color: rgba(246,241,230,.6); font-size: 13px; font-variant-numeric: tabular-nums; }
+.week-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--yellow-bright); font-size: 13px; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none;
+}
+
+/* ---------- Hook in2 Hockey feature ---------- */
+.hook-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 80px; align-items: center; }
+.hook-visual {
+  position: relative; aspect-ratio: 5/6;
+  background: linear-gradient(135deg, var(--yellow), var(--yellow-deep));
+  border-radius: 4px; padding: 32px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  color: var(--navy); overflow: hidden;
+}
+.hook-visual::before {
+  content: ''; position: absolute; top: -40%; right: -20%;
+  width: 80%; height: 140%;
+  background: radial-gradient(circle, rgba(255,255,255,.2), transparent 60%);
+}
+.hook-badge {
+  position: relative; display: inline-flex; align-items: center; gap: 10px;
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;
+  align-self: flex-start; padding: 8px 14px;
+  background: var(--navy); color: var(--yellow-bright); border-radius: 100px;
+}
+.hook-visual-title {
+  position: relative; font-family: var(--display);
+  font-size: clamp(36px, 5vw, 60px); font-weight: 500;
+  line-height: .95; letter-spacing: -0.025em;
+}
+.hook-visual-title em { font-style: italic; font-weight: 300; color: var(--navy); }
+.hook-visual-meta {
+  position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  padding-top: 24px; border-top: 1px solid rgba(4,28,44,.25);
+}
+.hook-meta-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; opacity: .7; margin-bottom: 4px; }
+.hook-meta-value { font-family: var(--display); font-size: 18px; font-weight: 500; }
+.check-list { list-style: none; display: grid; gap: 16px; margin: 0 0 12px; padding: 0; }
+.check-list li { display: flex; gap: 14px; align-items: flex-start; font-size: 15px; color: var(--navy); }
+.check-list li::before {
+  content: ''; flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+  background-color: var(--yellow);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'><path d='M2.5 6l2.5 2.5L9.5 3.5' stroke='%23041C2C' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat; background-position: center; background-size: 12px;
+  margin-top: 1px;
+}
+
+/* ---------- News cards ---------- */
+.news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.news-card {
+  background: var(--bg-surface); border-radius: 4px; overflow: hidden;
+  transition: all .3s; border: 1px solid transparent;
+  text-decoration: none; color: inherit; display: block;
+}
+.news-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--line); }
+.news-img {
+  aspect-ratio: 3/2; background: var(--navy); position: relative; overflow: hidden;
+  background-size: cover; background-position: center;
+}
+.news-cat {
+  position: absolute; top: 16px; left: 16px;
+  background: var(--cream); color: var(--navy);
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700;
+  padding: 6px 10px; border-radius: 3px; z-index: 2;
+}
+.news-body { padding: 24px; }
+.news-date { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.news-title {
+  font-family: var(--display); font-size: 22px; font-weight: 500;
+  line-height: 1.25; color: var(--navy); margin-bottom: 12px; letter-spacing: -0.01em;
+}
+.news-excerpt { color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+/* ---------- Sponsors ---------- */
+.sponsors-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px;
+  background: var(--line); border: 1px solid var(--line);
+  border-radius: 4px; overflow: hidden;
+}
+.sponsor-tile {
+  background: var(--bg-surface); aspect-ratio: 3/2;
+  display: grid; place-items: center; padding: 24px;
+  transition: all .3s; color: var(--navy); text-align: center; text-decoration: none;
+}
+.sponsor-tile:hover { background: #fff; transform: scale(1.03); box-shadow: var(--shadow-md); position: relative; z-index: 1; }
+.sponsor-name { font-family: var(--display); font-weight: 500; font-size: 15px; line-height: 1.2; letter-spacing: -0.01em; }
+.sponsor-tile-invert { background: var(--navy); }
+.sponsor-tile-invert .sponsor-name { color: var(--yellow-bright); }
+.sponsors-cta { margin-top: 48px; text-align: center; font-size: 14px; color: var(--muted); }
+.sponsors-cta a { color: var(--navy); font-weight: 700; border-bottom: 1px solid var(--yellow); padding-bottom: 2px; text-decoration: none; }
+
+/* ---------- Awards & records promo tiles ---------- */
+.awards-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.awards-tile {
+  background: rgba(246,241,230,0.05); border: 1px solid rgba(246,241,230,0.1);
+  border-radius: 4px; padding: 20px; text-decoration: none; display: block;
+  transition: background .2s;
+}
+.awards-tile:hover { background: rgba(246,241,230,0.1); }
+.awards-tile-num { font-family: var(--display); font-size: 28px; font-weight: 300; color: var(--yellow); letter-spacing: -0.02em; }
+.awards-tile-label { font-size: 13px; color: rgba(246,241,230,0.6); margin-top: 4px; }
+
+/* ---------- Instagram wall ---------- */
+.instagram-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+.instagram-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; opacity: .8; transition: opacity .2s; }
+.instagram-grid a:hover img { opacity: 1; }
+
+/* ---------- Section pages: split layouts & card grids ---------- */
+.page-section-split { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+.page-section-split--center { align-items: center; }
+.page-section-split--gap-sm { gap: 32px; }
+.comp-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
+.age-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 40px; }
+.off-field-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.info-card-navy { background: var(--navy); border-radius: 4px; padding: 36px; color: var(--cream); }
+.info-card-navy p { color: rgba(246,241,230,0.75); font-size: 15px; }
+.info-card-navy h3, .info-card-navy h4 { color: var(--cream); }
+.info-card-navy a { color: var(--yellow-bright); border-bottom: 1px solid rgba(241,180,52,.4); padding-bottom: 1px; text-decoration: none; }
+.info-card-navy hr { border: none; border-top: 1px solid rgba(255,255,255,.1); margin: 24px 0; }
+.info-card-navy strong { color: var(--cream); }
+
+.comp-card { background: #fff; border-radius: 4px; padding: 28px; border: 1px solid var(--line); }
+.comp-card-bar { width: 40px; height: 4px; background: var(--yellow); border-radius: 2px; margin-bottom: 20px; }
+.comp-card-bar--blue { background: var(--blue); }
+.comp-card h4 { margin-bottom: 10px; }
+.comp-card p { color: var(--muted); font-size: 15px; }
+
+.age-card { background: #fff; border-radius: 4px; padding: 24px; border: 1px solid var(--line); text-align: center; }
+.age-card-num { font-family: var(--display); font-size: 32px; color: var(--navy); font-weight: 400; margin-bottom: 8px; }
+.age-card-label { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+.age-card p { font-size: 14px; color: var(--muted); }
+
+.mini-tile { background: rgba(255,255,255,.06); border-radius: 4px; padding: 24px; }
+.mini-tile-word { font-family: var(--display); font-size: 36px; color: var(--yellow); font-weight: 400; line-height: 1; }
+.mini-tile-label { font-size: 13px; color: rgba(246,241,230,0.6); margin-top: 8px; letter-spacing: .1em; text-transform: uppercase; }
+
+/* ---------- Inner pages: New Players / Contact (ported from site.css) ---------- */
+.faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
+.section-pick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 40px; }
+.steps-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 48px; }
+.contact-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 48px; }
+.contact-split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+
+.faq-card, .contact-card { background: #fff; border-radius: 4px; padding: 32px; border: 1px solid var(--line); }
+.faq-card h4 { margin-bottom: 12px; }
+.faq-card p { color: var(--muted); }
+.faq-card ul { list-style: disc; margin: 12px 0 0; padding-left: 20px; color: var(--muted); font-size: 14px; display: grid; gap: 6px; }
+
+/* check-list items are flex rows (tick + text); keep each item's content in one
+   flex child so inline markup (<strong>, <a>) can't scatter across the row */
+.check-list li > span { flex: 1; }
+.contact-card h4 { margin-bottom: 8px; }
+.contact-card p { color: var(--muted); font-size: 14px; margin-bottom: 16px; }
+.contact-card .eyebrow { margin-bottom: 16px; }
+.contact-card a { color: var(--yellow-deep); font-size: 14px; border-bottom: 1px solid currentColor; padding-bottom: 1px; text-decoration: none; }
+.contact-card a.contact-card-alt { color: var(--muted); border-bottom: none; margin-top: 8px; display: inline-block; }
+
+.section-pick-card { background: var(--navy); border-radius: 4px; padding: 28px; color: var(--cream); display: block; text-decoration: none; }
+.section-pick-tag { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--yellow); margin-bottom: 16px; }
+.section-pick-card h4 { color: var(--cream); margin-bottom: 10px; }
+.section-pick-card p { color: rgba(246,241,230,0.65); font-size: 14px; margin-bottom: 20px; }
+.section-pick-card .section-pick-more { font-size: 13px; color: var(--yellow-bright); }
+
+.step-num { font-family: var(--display); font-size: 64px; color: var(--yellow-deep); font-weight: 400; line-height: 1; margin-bottom: 20px; }
+.steps-grid-3 h4 { margin-bottom: 12px; }
+.steps-grid-3 p { color: var(--muted); }
+.steps-grid-3 p a { color: var(--yellow-deep); border-bottom: 1px solid currentColor; padding-bottom: 1px; text-decoration: none; }
+
+/* ---------- Fees table (Registration & fees band, New Players page) ---------- */
+/* width is capped inline in the page markup (max-width:860px; margin:0 auto) so
+   the layout engine can't stretch it back to the full 1240 wrap */
+.fees-table-wrap { background: var(--bg-surface); border: 1px solid var(--line); border-radius: var(--radius-md); overflow-x: auto; margin-top: 40px; }
+.fees-table { width: 100%; border-collapse: collapse; min-width: 480px; }
+.fees-table th { padding: 14px 20px; font-size: 12px; font-weight: 900; letter-spacing: 0.14em; text-transform: uppercase; color: var(--navy); background: var(--yellow); text-align: left; }
+.fees-table th:last-child { text-align: right; }
+.fees-table td { padding: 12px 20px; border-top: 1px solid var(--line-light); font-size: 15px; color: var(--ink); }
+.fees-table td.fee-amount { text-align: right; font-family: var(--display); font-size: 18px; white-space: nowrap; }
+.fees-table tr.fee-group td { padding-top: 18px; font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow-deep); border-top: 1px solid var(--line); }
+.fees-table tr:first-child.fee-group td { border-top: none; }
+
+/* ---------- Uniforms page (ported from site.css) ---------- */
+.uniform-showcase-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 28px; }
+.uniform-showcase-card { background: var(--bg-surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 24px; overflow: hidden; box-shadow: var(--shadow-sm); }
+.uniform-showcase-card h3 { margin-bottom: 18px; }
+.uniform-kit-row { display: grid; align-items: end; gap: 16px; }
+.uniform-kit-row--four { grid-template-columns: 1fr 1fr 1fr 0.8fr; }
+.uniform-kit-row--three { grid-template-columns: 1fr 1fr 0.8fr; }
+.uniform-kit-row img { width: 100%; max-height: 250px; object-fit: contain; object-position: bottom center; margin: 0 auto; }
+.uniform-price-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.uniform-price-card,
+.uniform-note-card,
+.uniform-clash-table-wrap { background: var(--bg-surface); border: 1px solid var(--line); border-radius: var(--radius-md); overflow: hidden; }
+.uniform-price-card { padding: 28px; }
+.uniform-price-tag {
+  display: inline-flex; margin-bottom: 18px; padding: 5px 10px;
+  border-radius: var(--radius-pill); background: rgba(241,180,52,0.14); color: var(--yellow-deep);
+  font-size: 10px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase;
+}
+.uniform-price-card h3 { margin-bottom: 10px; }
+.uniform-price-card p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+.uniform-price { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line-light); font-family: var(--display); font-size: 24px; color: var(--navy); }
+.uniform-price a { color: var(--yellow-deep); border-bottom: 1px solid currentColor; padding-bottom: 2px; text-decoration: none; }
+.uniform-order-copy, .uniform-number-copy { max-width: 860px; }
+.uniform-note-card { padding: 36px; }
+.uniform-note-card--below { max-width: 720px; margin-top: 32px; }
+.uniform-note-card h3 { margin-bottom: 14px; }
+.uniform-note-card p { color: var(--muted); margin-bottom: 18px; }
+.uniform-note-card a { color: var(--yellow-deep); font-weight: 800; border-bottom: 1px solid currentColor; padding-bottom: 1px; text-decoration: none; }
+/* (improvement over the static site, which clipped the table on phones) */
+.uniform-clash-table-wrap { overflow-x: auto; }
+.uniform-clash-table { width: 100%; border-collapse: collapse; min-width: 620px; }
+.uniform-clash-table caption { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.uniform-clash-table th { padding: 16px 20px; font-size: 12px; font-weight: 900; letter-spacing: 0.14em; text-transform: uppercase; color: var(--navy); text-align: left; }
+.uniform-clash-head-shirt { background: var(--yellow); }
+.uniform-clash-head-sock { background: var(--blue); color: var(--cream); }
+.uniform-clash-table td { vertical-align: top; padding: 22px; border-top: 1px solid var(--line-light); }
+.uniform-clash-table td + td,
+.uniform-clash-table th + th { border-left: 1px solid var(--line-light); }
+.uniform-clash-list { list-style: none; columns: 3; column-gap: 26px; margin: 0; padding: 0; }
+.uniform-clash-list--socks { columns: 1; }
+.uniform-clash-list li { break-inside: avoid; font-size: 14px; line-height: 1.45; color: var(--ink); padding: 3px 0; }
+
+/* ---------- Responsive (ported breakpoints) ---------- */
+@media (max-width: 960px) {
+  .hook-grid, .awards-split { grid-template-columns: 1fr; }
+  .hook-visual { aspect-ratio: auto; padding: 28px; }
+  .hook-visual-meta { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .hero-stats, .stat-strip { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .stat { border-right: none; padding: 0; }
+  .sections-grid, .news-grid { grid-template-columns: 1fr 1fr; }
+  .week-grid { grid-template-columns: 1fr; }
+  .sponsors-grid { grid-template-columns: repeat(3, 1fr); }
+  .instagram-grid { grid-template-columns: repeat(3, 1fr); }
+  .hero-mascot-stage { display: none; }
+  .stat-num { font-size: 36px; }
+  .page-section-split,
+  .page-section-split--center { grid-template-columns: 1fr; gap: 28px; }
+  .page-section-split--gap-sm { gap: 20px; }
+  .comp-grid-3 { grid-template-columns: 1fr; }
+  .age-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .contact-split { grid-template-columns: 1fr; gap: 32px; }
+  .contact-cards-grid { grid-template-columns: 1fr 1fr; }
+  .faq-grid { grid-template-columns: 1fr; }
+  .steps-grid-3 { grid-template-columns: 1fr; }
+  .section-pick-grid { grid-template-columns: repeat(2, 1fr); }
+  .uniform-showcase-grid,
+  .uniform-price-grid { grid-template-columns: 1fr; }
+  .uniform-clash-list { columns: 2; }
+}
+@media (max-width: 760px) {
+  .uniform-kit-row,
+  .uniform-kit-row--four,
+  .uniform-kit-row--three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .sections-grid, .news-grid { grid-template-columns: 1fr; }
+  .team-card { aspect-ratio: 5/3; }
+  .sponsors-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero-stats, .stat-strip { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .stat-num { font-size: 30px; }
+  .age-grid-4 { grid-template-columns: 1fr; }
+  .contact-cards-grid { grid-template-columns: 1fr; }
+  .section-pick-grid { grid-template-columns: 1fr; }
+  .contact-split > div { padding: 32px !important; }
+  .uniform-price-grid { grid-template-columns: 1fr; }
+  .uniform-kit-row img { max-height: 210px; }
+  .uniform-showcase-card,
+  .uniform-price-card { padding: 22px; }
+  .uniform-note-card { padding: 28px; }
+  .uniform-clash-list { columns: 1; }
+}

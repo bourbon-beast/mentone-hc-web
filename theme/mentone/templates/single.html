@@ -1,0 +1,24 @@
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+
+<!-- wp:group {"tagName":"main","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|90","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
+<main class="wp-block-group" style="padding-top:var(--wp--preset--spacing--80);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--90);padding-left:var(--wp--preset--spacing--50)">
+	<!-- wp:group {"className":"news-article-meta","layout":{"type":"flex","flexWrap":"nowrap"}} -->
+	<div class="wp-block-group news-article-meta">
+		<!-- wp:post-terms {"term":"category","className":"eyebrow"} /-->
+		<!-- wp:post-date {"fontSize":"small"} /-->
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:post-title {"level":1} /-->
+
+	<!-- wp:post-featured-image {"style":{"border":{"radius":"4px"},"spacing":{"margin":{"top":"var:preset|spacing|60"}}}} /-->
+
+	<!-- wp:post-content {"layout":{"type":"constrained"}} /-->
+
+	<!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"var:preset|spacing|70"}}}} -->
+	<p style="margin-top:var(--wp--preset--spacing--70)"><a href="/news/">← Back to all news</a></p>
+	<!-- /wp:paragraph -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
