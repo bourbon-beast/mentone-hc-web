@@ -40,9 +40,14 @@ HONOUR_BOARDS_HUB = """
 </div>
 """
 
+class WordPressAPIError(RuntimeError):
+    """Raised when a WordPress request cannot be safely applied."""
+
+
 def api(path, method='GET', payload=None, binary=None, ctype=None, fname=None):
     auth = (ROOT / '.wp-auth').read_text().strip()
-    cmd = ['curl', '-s', '-u', auth, '-X', method, BASE + path]
+    cmd = ['curl', '--silent', '--show-error', '--fail-with-body',
+           '-u', auth, '-X', method, BASE + path]
     if payload is not None:
         p = ROOT / '_payload.json'
         p.write_text(json.dumps(payload), encoding='utf-8')
@@ -51,11 +56,27 @@ def api(path, method='GET', payload=None, binary=None, ctype=None, fname=None):
         cmd += ['-H', f'Content-Type: {ctype}',
                 '-H', f'Content-Disposition: attachment; filename="{fname}"',
                 '--data-binary', '@' + str(binary)]
-    out = subprocess.run(cmd, capture_output=True).stdout
+    result = subprocess.run(cmd, capture_output=True)
+    out = result.stdout
+    if result.returncode:
+        detail = (out or result.stderr)[:300].decode('utf-8', 'replace')
+        raise WordPressAPIError(
+            f'WordPress API {method} {path} failed '
+            f'(curl exit {result.returncode}): {detail}'
+        )
     try:
-        return json.loads(out)
-    except Exception:
-        return {'_raw': out[:300].decode('utf-8', 'replace')}
+        response = json.loads(out)
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        detail = out[:300].decode('utf-8', 'replace')
+        raise WordPressAPIError(
+            f'WordPress API {method} {path} returned invalid JSON: {detail}'
+        ) from exc
+    if isinstance(response, dict) and response.get('code') and response.get('message'):
+        raise WordPressAPIError(
+            f"WordPress API {method} {path} failed "
+            f"({response['code']}): {response['message']}"
+        )
+    return response
 
 def rewrite_href(href, depth):
     """Map static relative links to WP paths. depth 1 = history/, 2 = honour-boards/."""
@@ -110,10 +131,13 @@ def convert(path, depth):
 
 def find_page(slug, parent):
     r = api(f'/pages?slug={slug}&status=publish,draft,pending,private&context=edit&per_page=100')
-    if isinstance(r, list):
-        for p in r:
-            if p.get('parent') == parent:
-                return p
+    if not isinstance(r, list):
+        raise WordPressAPIError(
+            f'WordPress page lookup for {slug!r} returned {type(r).__name__}, not a list'
+        )
+    for p in r:
+        if p.get('parent') == parent:
+            return p
     return None
 
 def upsert(slug, parent, title, content, order):
@@ -122,9 +146,24 @@ def upsert(slug, parent, title, content, order):
     existing = find_page(slug, parent)
     r = api(f"/pages/{existing['id']}" if existing else '/pages', 'POST', payload)
     verb = 'updated' if existing else 'created'
-    ok = r.get('slug') == slug and r.get('status') == 'publish'
-    print(f"  {verb} {r.get('id')} {r.get('link')} {'' if ok else '!! got slug=' + str(r.get('slug'))}")
-    return r.get('id')
+    if (not isinstance(r, dict) or not isinstance(r.get('id'), int) or
+            r.get('slug') != slug or r.get('status') != 'publish'):
+        raise WordPressAPIError(
+            f'WordPress page {verb} failed validation for {slug!r}: {str(r)[:300]}'
+        )
+    print(f"  {verb} {r['id']} {r.get('link')}")
+    return r['id']
+
+
+def resolve_parent_id(ids, parent_key):
+    if parent_key is None:
+        return 0
+    parent = ids.get(parent_key)
+    if not isinstance(parent, int) or parent <= 0:
+        raise WordPressAPIError(
+            f'Cannot publish child page: parent {parent_key!r} was not published'
+        )
+    return parent
 
 def main():
     push = '--push' in sys.argv
@@ -158,7 +197,11 @@ def main():
     for f in media_files:
         wp_slug = re.sub(r'-+$', '', pathlib.Path(f).stem.lower().replace(' ', '-'))
         r = api(f'/media?slug={wp_slug}')
-        if isinstance(r, list) and r:
+        if not isinstance(r, list):
+            raise WordPressAPIError(
+                f'WordPress media lookup for {f!r} returned {type(r).__name__}, not a list'
+            )
+        if r:
             url_map[f] = r[0]['source_url']
             print('  media exists', f)
         else:
@@ -171,7 +214,7 @@ def main():
     ids = {}
     for slug, parent_key, title, content, order in pages:
         content = re.sub(r'\{\{MEDIA:([^}]+)\}\}', lambda m: url_map[m.group(1)], content)
-        parent = ids.get(parent_key, 0)
+        parent = resolve_parent_id(ids, parent_key)
         ids[slug] = upsert(slug, parent, title, content, order)
 
 if __name__ == '__main__':
