@@ -822,6 +822,10 @@ body.nav-open { overflow: hidden; }
   border-radius: var(--radius-md);
   overflow: hidden;
 }
+.uniform-clash-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
 .uniform-price-card {
   padding: 28px;
 }
