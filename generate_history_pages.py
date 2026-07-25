@@ -241,11 +241,38 @@ def read_md(file_id):
     return ""
 
 
+def _split_table_row(line):
+    """Split a markdown table row into cells, preserving empty columns."""
+    parts = line.split("|")
+    # Standard markdown rows are "| a | b |" → leading/trailing empties from the pipes.
+    if parts and parts[0].strip() == "":
+        parts = parts[1:]
+    if parts and parts[-1].strip() == "":
+        parts = parts[:-1]
+    return [c.strip() for c in parts]
+
+
+def _clean_header_cell(text):
+    return re.sub(r"\*+", "", text).lower().strip()
+
+
+def _row_has_data(row, headers):
+    """True when any non-year column has a real value (empty cells must not drop the row)."""
+    for key in headers[1:]:
+        val = row.get(key, "").strip()
+        if val and val not in ("—", "-", "–"):
+            return True
+    return False
+
+
 def parse_table(md_text):
     """
     Extract rows from a Markdown table.
     Returns list of dicts with keys from header row.
-    Strips empty/placeholder rows (year with no player).
+    Strips empty/placeholder rows (year with no data in any column).
+
+    Empty cells are preserved so later columns do not shift left — critical for
+    multi-column boards (executive, coaches, coordinators, President's Cup).
     """
     rows = []
     in_table = False
@@ -262,30 +289,36 @@ def parse_table(md_text):
             continue
         # strip image markdown before splitting
         line = re.sub(r"!\[.*?\]\(.*?\)", "", line)
-        cells = [c.strip() for c in line.split("|") if c.strip()]
-        if not cells:
+        cells = _split_table_row(line)
+        if not any(cells):
             continue
         if "---" in cells[0]:
             continue
         if not headers:
-            headers = [h.lower().strip() for h in cells]
+            headers = [_clean_header_cell(h) for h in cells]
             in_table = True
             continue
-        if len(cells) < 2:
-            continue
+        # Pad / trim so empty trailing cells cannot shift values into the wrong keys.
+        if len(cells) < len(headers):
+            cells = cells + [""] * (len(headers) - len(cells))
+        elif len(cells) > len(headers):
+            cells = cells[: len(headers)]
         row = dict(zip(headers, cells))
-        # Skip rows where the second column (player/name) is empty or looks like a placeholder
-        player_key = headers[1] if len(headers) > 1 else None
-        if player_key:
-            val = row.get(player_key, "").strip()
-            if not val or val in ("—", "-", "–"):
-                continue
-            # skip future placeholder rows (year > 2024 with no player)
-            year_val = row.get(headers[0], "").strip()
-            if year_val.isdigit() and int(year_val) > 2024 and not val:
-                continue
+        if not _row_has_data(row, headers):
+            continue
         rows.append(row)
     return rows, headers
+
+
+def is_best_and_fairest_table(headers):
+    """Year / Player [/ Grade] tables keep pill styling; wider boards render generically."""
+    if not headers or headers[0] != "year":
+        return False
+    if len(headers) == 2 and headers[1] == "player":
+        return True
+    if len(headers) == 3 and headers[1] == "player" and headers[2] == "grade":
+        return True
+    return False
 
 
 def count_wins(rows, player_key):
@@ -300,7 +333,7 @@ def count_wins(rows, player_key):
     return counts.most_common(8)
 
 
-def table_stats(rows, year_key, player_key):
+def table_stats(rows, year_key, player_key, headers=None):
     """Return (first_year, last_year, total_seasons)."""
     years = []
     for r in rows:
@@ -309,8 +342,17 @@ def table_stats(rows, year_key, player_key):
             years.append(int(y))
     if not years:
         return "—", "—", 0
-    valid_rows = [r for r in rows if r.get(player_key,"").strip()
-                  and not any(marker in r.get(player_key,"").lower() for marker in NON_WINNER_MARKERS)]
+    keys = headers[1:] if headers and len(headers) > 1 else [player_key]
+
+    def _is_valid(r):
+        for key in keys:
+            val = r.get(key, "").strip()
+            if val and val not in ("—", "-", "–"):
+                if not any(marker in val.lower() for marker in NON_WINNER_MARKERS):
+                    return True
+        return False
+
+    valid_rows = [r for r in rows if _is_valid(r)]
     return min(years), max(years), len(valid_rows)
 
 
@@ -427,28 +469,61 @@ def image_block_html(image_file):
     </div>"""
 
 
+def _row_marker_text(row, headers):
+    """Concatenate non-year cells for COVID / placeholder detection."""
+    return " ".join(row.get(h, "") for h in headers[1:]).lower()
+
+
+def format_header_label(header):
+    """Capitalize header labels without str.title()'s Men'S apostrophe quirk."""
+    return escape(" ".join(part.capitalize() for part in header.split()))
+
+
+def table_header_html(headers):
+    return "".join(f"<th>{format_header_label(h)}</th>" for h in headers)
+
+
 def table_rows_html(rows, headers):
     """Generate HTML table rows, colouring COVID/no-season rows differently."""
-    html = ""
-    year_key = headers[0] if headers else "year"
-    player_key = headers[1] if len(headers) > 1 else "player"
-    grade_key = headers[2] if len(headers) > 2 else None
+    if not headers:
+        return ""
+    year_key = headers[0]
 
     # Determine most recent real year for "current" highlight
     real_years = []
     for r in rows:
         y = r.get(year_key, "").strip()
-        p = r.get(player_key, "").strip()
-        if y.isdigit() and p and "covid" not in p.lower() and "no season" not in p.lower() and "no presentation" not in p.lower():
+        if y.isdigit() and not any(m in _row_marker_text(r, headers) for m in NON_WINNER_MARKERS):
             real_years.append(int(y))
     latest_year = max(real_years) if real_years else None
+
+    if not is_best_and_fairest_table(headers):
+        html = ""
+        for r in rows:
+            year = r.get(year_key, "").strip()
+            marker = _row_marker_text(r, headers)
+            is_covid = any(m in marker for m in NON_WINNER_MARKERS)
+            is_current = year.isdigit() and int(year) == latest_year and not is_covid
+            row_class = ' class="covid"' if is_covid else (' class="current"' if is_current else "")
+            cells = "".join(
+                f'<td class="year">{escape(year)}</td>'
+                if h == year_key
+                else f"<td>{escape(r.get(h, '').strip())}</td>"
+                for h in headers
+            )
+            html += f"<tr{row_class}>{cells}</tr>\n"
+        return html
+
+    player_key = headers[1]
+    grade_key = headers[2] if len(headers) > 2 else None
+    html = ""
 
     for r in rows:
         year = r.get(year_key, "").strip()
         player = r.get(player_key, "").strip()
         grade = r.get(grade_key, "").strip() if grade_key else ""
 
-        is_covid = "covid" in player.lower() or "no season" in player.lower() or "no presentation" in player.lower()
+        is_covid = any(m in player.lower() for m in NON_WINNER_MARKERS)
         is_current = year.isdigit() and int(year) == latest_year and not is_covid
 
         row_class = ""
@@ -462,7 +537,7 @@ def table_rows_html(rows, headers):
         if grade_key and grade:
             is_pl = "premier league" in grade.lower()
             pill_class = "grade-pill pl" if is_pl else "grade-pill"
-            grade_cell = f'<td class="grade-tag"><span class="{pill_class}">{grade}</span></td>'
+            grade_cell = f'<td class="grade-tag"><span class="{pill_class}">{escape(grade)}</span></td>'
         elif grade_key:
             grade_cell = '<td class="grade-tag"></td>'
 
@@ -473,7 +548,12 @@ def table_rows_html(rows, headers):
         if grade and "premier league" in grade.lower():
             data_attrs += ' data-grade="pl"'
 
-        html += f'<tr{row_class}{data_attrs}><td class="year">{year}</td><td class="player">{player}</td>{grade_cell}</tr>\n'
+        html += (
+            f'<tr{row_class}{data_attrs}>'
+            f'<td class="year">{escape(year)}</td>'
+            f'<td class="player">{escape(player)}</td>'
+            f'{grade_cell}</tr>\n'
+        )
     return html
 
 
@@ -513,16 +593,17 @@ def generate_grade_page(file_id, slug, section, grade_num, label, image_file, re
 
     year_key = headers[0]
     player_key = headers[1] if len(headers) > 1 else headers[0]
-    has_grade_col = len(headers) > 2
+    bf_table = is_best_and_fairest_table(headers)
+    has_grade_col = bf_table and len(headers) > 2
 
-    first_yr, last_yr, total = table_stats(rows, year_key, player_key)
+    first_yr, last_yr, total = table_stats(rows, year_key, player_key, headers)
     wins = count_wins(rows, player_key)
     max_wins = wins[0][1] if wins else 1
     most_wins_str = f"{wins[0][0]} · {wins[0][1]}" if wins else "—"
     section_label = SECTION_LABELS.get(section, "")
     is_awards_page = section in ("mens-awards","womens-awards","coaching","admin")
 
-    # Show filter only if has grade column and is a grade page
+    # Show filter only on best-and-fairest grade pages (Year / Player / Grade).
     filter_html = ""
     filter_js = ""
     if has_grade_col and not is_awards_page:
@@ -534,8 +615,11 @@ def generate_grade_page(file_id, slug, section, grade_num, label, image_file, re
         </div>"""
         filter_js = FILTER_JS
 
-    # Grade column header label
-    grade_th = f'<th style="text-align:right">Grade</th>' if has_grade_col else ""
+    if bf_table:
+        grade_th = f'<th style="text-align:right">Grade</th>' if has_grade_col else ""
+        header_row = f"<th>Year</th><th>Player</th>{grade_th}"
+    else:
+        header_row = table_header_html(headers)
 
     rows_html = table_rows_html(rows, headers)
 
@@ -587,9 +671,7 @@ def generate_grade_page(file_id, slug, section, grade_num, label, image_file, re
           <table class="hb-table" id="honours-table">
             <thead>
               <tr>
-                <th>Year</th>
-                <th>Player</th>
-                {grade_th}
+                {header_row}
               </tr>
             </thead>
             <tbody>
@@ -656,7 +738,7 @@ def generate_club_award_page(file_id, slug, label, section_label, summary):
     latest_label = f"{latest[1]} ({latest[0]})" if latest else "—"
     latest_year = latest[0] if latest else None
 
-    header_html = "".join(f"<th>{escape(h.title())}</th>" for h in headers)
+    header_html = "".join(f"<th>{format_header_label(h)}</th>" for h in headers)
     row_html = ""
     for row in rows:
         year_val = row.get(year_key, "").strip()
