@@ -14,11 +14,36 @@ Tracking: [Trello board](https://trello.com/b/7p58DMLL/mentone-website) · Platf
 
 **Ranked remainder:**
 - *Tier 1 (blocked on club input):* season key-dates strip (⚑ start/end, holiday breaks), premierships page (⚑ no real data exists — legacy page was placeholder junk).
-- *Tier 2 (content depth):* junior programs beyond H2H (roadshows, Nov/Dec clinic, U8/U10 comp ⚑), RVL explainer + points-jobs list ⚑, governance/policy library (Phase 2), photo/video refresh ⚑, representative players page.
-- *Tier 3 (features):* fixtures/upcoming games all sections (parked GCP side project — 2 of 3 respondents want it), social feed embeds, email signup, sponsors showcase, members-only area (team lists, rosters, process docs — needs auth decision; interim channel = news posts + announce bar).
+- *Tier 2 (content depth):* junior programs beyond H2H (roadshows, Nov/Dec clinic, U8/U10 comp ⚑), RVL explainer + points-jobs list ⚑, governance/policy library (Phase 2), photo/video refresh ⚑ (scoped 2026-07-10, see below), representative players page.
+- *Tier 3 (features):* fixtures/upcoming games all sections (parked GCP side project — 2 of 3 respondents want it), social feed embeds (scoped 2026-07-10, see below), email signup, sponsors showcase, members-only area (team lists, rosters, process docs — needs auth decision; interim channel = news posts + announce bar).
 - *Ops, not build:* team vacancies, ball-kid roster, social calendar, big-match promotion.
 
 ⚑ also outstanding: should site-wide Register buttons point at Majestri (`mentonehockey.majestri.com.au/2026-winter-season`) instead of revolutionise `club-registrations`?
+
+### Photo/video refresh ⚑ (scoped 2026-07-10)
+
+Steve's feedback: the site needs more photos of people. Two moves, not competing — do both once real photos are in hand (Steve is collecting them himself, no member-upload feature needed):
+
+- **Gallery page** — new `/gallery/` page, native WP core Gallery block (grid + lightbox built into WP 6.4+, confirmed on our WP 7.0 install), grouped into sections Steve adds ad hoc (e.g. "2026 Season", "Presentation Night"). No gallery plugin — deliberately purged from the old site (see `docs/old-site-audit.md`) with the rationale "the block theme replaces gallery plugins natively."
+- **Sprinkle into existing slots** — `theme/mentone/patterns/team-cards.php` already has a documented, unused hook: *"Add photos by setting a background-image on each card's team-card-bg div"* on the 4 homepage section cards. Zero new code, highest leverage. Also check section-page hero/about patterns for similar slots, and add real featured images to news posts once the draft/Unsplash placeholder posts are replaced with real content.
+- **Blocker:** live host is missing PHP `gd`/`imagick` extensions (open item, `docs/wordpress-migration.md` line 68) — WordPress can't generate thumbnails without them, so the gallery will serve full-size images and degrade until fixed. Fix via cPanel → PHP Extensions before building the gallery page.
+
+**Photo slot tracker** (only pattern with dedicated photo hooks today — audited 2026-07-10, `theme/mentone/style.css`):
+- [ ] Men's team card — `.team-card[data-team="mens"] .team-card-bg` (line 318)
+- [ ] Women's team card — `.team-card[data-team="womens"] .team-card-bg` (line 319)
+- [ ] Juniors team card — `.team-card[data-team="juniors"] .team-card-bg` (line 320)
+- [ ] Masters team card — `.team-card[data-team="masters"] .team-card-bg` (line 321)
+
+More slots get added here as the gallery page and other patterns pick up photo hooks.
+
+### Social feed embeds (Instagram) — scoped 2026-07-10
+
+Current state: the homepage Instagram section is only a static mockup in the design reference (`index.html` lines 184-218, 5 hardcoded images) — it was never ported into the WordPress build (`theme/mentone/templates/front-page.html` doesn't include it). Porting it is outstanding work regardless of which option below gets picked.
+
+- **Option A — live embed:** Graph API integration or a paid plugin (SnapWidget/Elfsight). Real auto-sync, but needs a Meta Business/Creator account link, app review, and ongoing token/plugin upkeep.
+- **Option B — curated grid (leaning this way):** port the existing mockup into a real pattern (`patterns/instagram-feed.php`), Steve swaps images/links occasionally by hand. No API, no ongoing maintenance cost.
+
+Decision deferred — Steve to pick once ready.
 
 ---
 
