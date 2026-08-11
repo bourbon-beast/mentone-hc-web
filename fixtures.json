@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-04",
+  "updated": "2026-08-11",
   "sections": [
     {
       "id": "mens",
@@ -167,7 +167,7 @@
               "time": "2:00pm",
               "opponent": "Altona Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-08-16",
@@ -316,7 +316,7 @@
               "time": "12:30pm",
               "opponent": "Altona Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-08-16",
@@ -465,7 +465,7 @@
               "time": "2:00pm",
               "opponent": "Doncaster Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-08-15",
@@ -614,7 +614,7 @@
               "time": "12:30pm",
               "opponent": "Waverley Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "D"
             },
             {
               "date": "2026-08-15",
@@ -763,7 +763,7 @@
               "time": "5:00pm",
               "opponent": "Southern United Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-08-15",
@@ -912,7 +912,7 @@
               "time": "2:00pm",
               "opponent": "Old Haileyburians' Association Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-08-16",
@@ -1072,7 +1072,7 @@
               "time": "6:30pm",
               "opponent": "Altona Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-08-15",
@@ -1221,7 +1221,7 @@
               "time": "12:30pm",
               "opponent": "Bayside Powerhouse Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-08-15",
@@ -1370,7 +1370,7 @@
               "time": "5:00pm",
               "opponent": "Altona Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-08-16",
@@ -1519,7 +1519,7 @@
               "time": "3:00pm",
               "opponent": "Melbourne Razorbacks Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-08-15",
@@ -1668,7 +1668,7 @@
               "time": "5:00pm",
               "opponent": "Casey Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "D"
             },
             {
               "date": "2026-08-15",
@@ -1824,7 +1824,7 @@
               "time": "12:30pm",
               "opponent": "MCC Hockey Section",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-08-16",
@@ -1973,7 +1973,7 @@
               "time": "5:00pm",
               "opponent": "Frankston Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-08-16",
@@ -2130,7 +2130,7 @@
               "time": "1:30pm",
               "opponent": "PEGS Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-08-15",
@@ -2279,7 +2279,7 @@
               "time": "11:00am",
               "opponent": "Greater Dandenong Warriors Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-08-16",
@@ -2427,7 +2427,7 @@
               "time": "1:30pm",
               "opponent": "Hawthorn Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-08-15",
@@ -2440,7 +2440,7 @@
             {
               "date": "2026-08-22",
               "day": "Sat",
-              "time": "1:30pm",
+              "time": "3:30pm",
               "opponent": "Camberwell Hockey Club",
               "venue": "Away",
               "result": null
@@ -2576,7 +2576,7 @@
               "time": "12:30pm",
               "opponent": "Knox Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-08-15",
@@ -2725,7 +2725,7 @@
               "time": "12:30pm",
               "opponent": "Old Xaverians Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             },
             {
               "date": "2026-08-16",
@@ -2874,7 +2874,7 @@
               "time": "3:30pm",
               "opponent": "Southern United Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             },
             {
               "date": "2026-08-15",
