@@ -112,11 +112,7 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
         { date, day, time, opponent, venue, result }
     """
     print(f"  Fetching {grade_label} … {team_url}", flush=True)
-    try:
-        soup = fetch_soup(team_url)
-    except Exception as exc:
-        print(f"    WARNING: could not fetch page — {exc}", file=sys.stderr)
-        return []
+    soup = fetch_soup(team_url)
 
     fixtures = []
     seen_rounds: set[int] = set()
@@ -184,6 +180,32 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
+def fixture_count(fixtures_data: dict) -> int:
+    return sum(
+        len(grade.get("fixtures", []))
+        for section in fixtures_data.get("sections", [])
+        for grade in section.get("grades", [])
+    )
+
+
+def configured_grade_count(config: dict) -> int:
+    return sum(len(section.get("grades", [])) for section in config.get("sections", []))
+
+
+def validate_fixture_output(fixtures_data: dict, config: dict) -> None:
+    """
+    Refuse catastrophic empty scrapes. Individual grades may legitimately have
+    no fixtures, but an active configured season should not produce none at all.
+    """
+    total = fixture_count(fixtures_data)
+    grade_count = configured_grade_count(config)
+    if grade_count and total == 0:
+        raise RuntimeError(
+            f"scraper returned 0 fixtures across {grade_count} configured grades; "
+            "refusing to overwrite fixtures.json"
+        )
+
+
 def build_fixtures_json(config: dict) -> dict:
     output_sections = []
 
@@ -226,7 +248,12 @@ def main() -> None:
         config = json.load(fh)
 
     print(f"Scraping fixtures for {config.get('season', 'unknown')} season …")
-    result = build_fixtures_json(config)
+    try:
+        result = build_fixtures_json(config)
+        validate_fixture_output(result, config)
+    except Exception as exc:
+        print(f"ERROR: fixture scrape failed — {exc}", file=sys.stderr)
+        sys.exit(1)
 
     if args.dry_run:
         print("\n── fixtures.json (dry run) ──────────────────────────")
@@ -238,11 +265,7 @@ def main() -> None:
             fh.write("\n")
         print(f"\nWritten to {output_path}")
         print(f"Updated: {result['updated']}")
-        total = sum(
-            len(g["fixtures"])
-            for s in result["sections"]
-            for g in s["grades"]
-        )
+        total = fixture_count(result)
         print(f"Fixtures: {total} across {sum(len(s['grades']) for s in result['sections'])} grades")
 
 
