@@ -30,6 +30,11 @@ REPO_ROOT   = SCRIPT_DIR.parent
 CONFIG_FILE = SCRIPT_DIR / "mentone_teams_2026.json"
 OUTPUT_FILE = REPO_ROOT / "fixtures.json"
 
+
+class ScrapeError(RuntimeError):
+    """Raised when a fixture update would risk replacing good data with bad data."""
+
+
 # ── HTTP ──────────────────────────────────────────────────────────────────────
 
 HEADERS = {
@@ -115,8 +120,7 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
     try:
         soup = fetch_soup(team_url)
     except Exception as exc:
-        print(f"    WARNING: could not fetch page — {exc}", file=sys.stderr)
-        return []
+        raise ScrapeError(f"could not fetch {grade_label}: {exc}") from exc
 
     fixtures = []
     seen_rounds: set[int] = set()
@@ -210,6 +214,41 @@ def build_fixtures_json(config: dict) -> dict:
     }
 
 
+def fixture_count(data: dict) -> int:
+    return sum(
+        len(grade.get("fixtures", []))
+        for section in data.get("sections", [])
+        for grade in section.get("grades", [])
+    )
+
+
+def validate_fixture_update(result: dict, existing_path: Path) -> None:
+    total = fixture_count(result)
+    if total == 0:
+        raise ScrapeError("scrape produced zero fixtures; refusing to overwrite fixtures.json")
+
+    if not existing_path.exists():
+        return
+
+    try:
+        with open(existing_path, encoding="utf-8") as fh:
+            existing = json.load(fh)
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ScrapeError(f"could not validate existing fixtures file: {exc}") from exc
+
+    previous_total = fixture_count(existing)
+    if previous_total == 0:
+        return
+
+    minimum_expected = max(1, previous_total // 2)
+    if total < minimum_expected:
+        raise ScrapeError(
+            "scrape produced only "
+            f"{total} fixtures versus {previous_total} currently in fixtures.json; "
+            "refusing to overwrite likely-good data"
+        )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Update fixtures.json from Hockey Victoria")
     parser.add_argument("--dry-run",  action="store_true", help="Print JSON to stdout, don't write file")
@@ -226,7 +265,12 @@ def main() -> None:
         config = json.load(fh)
 
     print(f"Scraping fixtures for {config.get('season', 'unknown')} season …")
-    result = build_fixtures_json(config)
+    try:
+        result = build_fixtures_json(config)
+        validate_fixture_update(result, Path(args.output))
+    except ScrapeError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        sys.exit(1)
 
     if args.dry_run:
         print("\n── fixtures.json (dry run) ──────────────────────────")
