@@ -20,7 +20,7 @@
       "label": "Women's",
       "color": "blue",
       "grades": [
-        { "grade": "Premier League", "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/409832" },
+        { "grade": "Premier League", "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/409899" },
         { "grade": "PLR",            "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412429" },
         { "grade": "Pennant A",      "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412430" },
         { "grade": "Pennant B",      "team_url": "https://www.hockeyvictoria.org.au/games/team/25879/412431" },
