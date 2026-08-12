@@ -252,6 +252,10 @@
 
   function resultCell(result) {
     if (!result) return `<span class="fix-result tbd">TBC</span>`;
+    const resultClassByCode = { W: 'win', L: 'loss', D: 'draw' };
+    if (Object.prototype.hasOwnProperty.call(resultClassByCode, result)) {
+      return `<span class="fix-result ${resultClassByCode[result]}">${result}</span>`;
+    }
     const parts = result.split('-').map(Number);
     if (parts[0] > parts[1]) return `<span class="fix-result win">${result}</span>`;
     if (parts[0] < parts[1]) return `<span class="fix-result loss">${result}</span>`;
