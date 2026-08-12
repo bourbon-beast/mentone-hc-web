@@ -188,9 +188,17 @@
     return `<span class="cat-dot ${CAT_DOTS[cat] || 'cat-club'}"></span>`;
   }
 
+  function attrEscape(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
   function renderFeatured(a) {
     return `
-    <a href="#${a.id}" class="news-featured" onclick="showArticle('${a.id}'); return false;">
+    <a href="#${attrEscape(a.id)}" class="news-featured" data-article-id="${attrEscape(a.id)}">
       <div class="news-featured-img" style="background-image:url('${a.image}')"></div>
       <div class="news-featured-body">
         <div class="news-featured-cat">${catDot(a.category)}${a.category}</div>
@@ -203,7 +211,7 @@
 
   function renderCard(a) {
     return `
-    <a href="#${a.id}" class="news-card" onclick="showArticle('${a.id}'); return false;">
+    <a href="#${attrEscape(a.id)}" class="news-card" data-article-id="${attrEscape(a.id)}">
       <div class="news-img" style="background-image:linear-gradient(180deg,rgba(4,28,44,.1),rgba(2,18,28,.7)),url('${a.image}')">
         <span class="news-cat">${a.category}</span>
       </div>
@@ -218,13 +226,14 @@
   function renderFilters(activeCategory) {
     return `<div class="news-filters">
       ${CATEGORIES.map(c => `
-        <button class="news-filter-btn${c === activeCategory ? ' active' : ''}"
-          onclick="filterNews('${c}')">${c}</button>`).join('')}
+        <button type="button" class="news-filter-btn${c === activeCategory ? ' active' : ''}"
+          data-category="${attrEscape(c)}">${c}</button>`).join('')}
     </div>`;
   }
 
   let allArticles = [];
   let currentFilter = 'All';
+  const contentEl = document.getElementById('news-content');
 
   window.filterNews = function(cat) {
     currentFilter = cat;
@@ -234,8 +243,8 @@
   window.showArticle = function(id) {
     const a = allArticles.find(x => x.id === id);
     if (!a) return;
-    document.getElementById('news-content').innerHTML = `
-      <button onclick="renderNews()" style="display:inline-flex;align-items:center;gap:8px;margin-bottom:32px;font-size:14px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--body);">
+    contentEl.innerHTML = `
+      <button type="button" data-news-back style="display:inline-flex;align-items:center;gap:8px;margin-bottom:32px;font-size:14px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--body);">
         ← Back to news
       </button>
       <div style="max-width:720px;">
@@ -268,8 +277,30 @@
     }
 
     html += `<div style="font-size:12px;color:var(--muted);margin-top:48px;padding-top:24px;border-top:1px solid var(--line-light);">Last updated: ${window._newsUpdated || ''}</div>`;
-    document.getElementById('news-content').innerHTML = html;
+    contentEl.innerHTML = html;
   }
+
+  contentEl.addEventListener('click', event => {
+    const filterButton = event.target.closest('[data-category]');
+    if (filterButton) {
+      event.preventDefault();
+      window.filterNews(filterButton.dataset.category);
+      return;
+    }
+
+    const articleLink = event.target.closest('[data-article-id]');
+    if (articleLink) {
+      event.preventDefault();
+      window.showArticle(articleLink.dataset.articleId);
+      return;
+    }
+
+    const backButton = event.target.closest('[data-news-back]');
+    if (backButton) {
+      event.preventDefault();
+      renderNews();
+    }
+  });
 
   fetch('news.json')
     .then(r => { if (!r.ok) throw new Error('Could not load news'); return r.json(); })
@@ -279,7 +310,7 @@
       renderNews();
     })
     .catch(err => {
-      document.getElementById('news-content').innerHTML =
+      contentEl.innerHTML =
         `<div style="padding:32px;background:#fff3cd;border-radius:4px;font-size:14px;">News unavailable right now — please check back soon.<br/><small>${err.message}</small></div>`;
     });
 

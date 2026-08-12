@@ -252,9 +252,13 @@
 
   function resultCell(result) {
     if (!result) return `<span class="fix-result tbd">TBC</span>`;
-    const parts = result.split('-').map(Number);
-    if (parts[0] > parts[1]) return `<span class="fix-result win">${result}</span>`;
-    if (parts[0] < parts[1]) return `<span class="fix-result loss">${result}</span>`;
+    const normalised = String(result).trim().toUpperCase();
+    if (normalised === 'W') return `<span class="fix-result win">${result}</span>`;
+    if (normalised === 'L') return `<span class="fix-result loss">${result}</span>`;
+    if (normalised === 'D') return `<span class="fix-result draw">${result}</span>`;
+    const parts = String(result).split('-').map(Number);
+    if (parts.length === 2 && parts.every(Number.isFinite) && parts[0] > parts[1]) return `<span class="fix-result win">${result}</span>`;
+    if (parts.length === 2 && parts.every(Number.isFinite) && parts[0] < parts[1]) return `<span class="fix-result loss">${result}</span>`;
     return `<span class="fix-result draw">${result}</span>`;
   }
 
