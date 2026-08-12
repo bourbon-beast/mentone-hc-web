@@ -30,6 +30,11 @@ REPO_ROOT   = SCRIPT_DIR.parent
 CONFIG_FILE = SCRIPT_DIR / "mentone_teams_2026.json"
 OUTPUT_FILE = REPO_ROOT / "fixtures.json"
 
+
+class ScrapeError(RuntimeError):
+    """Raised when fixture scraping produced unsafe output."""
+
+
 # ── HTTP ──────────────────────────────────────────────────────────────────────
 
 HEADERS = {
@@ -115,8 +120,7 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
     try:
         soup = fetch_soup(team_url)
     except Exception as exc:
-        print(f"    WARNING: could not fetch page — {exc}", file=sys.stderr)
-        return []
+        raise ScrapeError(f"could not fetch {grade_label}: {exc}") from exc
 
     fixtures = []
     seen_rounds: set[int] = set()
@@ -210,11 +214,43 @@ def build_fixtures_json(config: dict) -> dict:
     }
 
 
+def validate_fixture_output(result: dict, allow_empty_grades: bool = False) -> None:
+    """Fail closed before overwriting fixtures.json with missing scrape output."""
+    sections = result.get("sections", [])
+    grades = [
+        (section.get("label", section.get("id", "Unknown section")), grade.get("grade", "Unknown grade"), grade)
+        for section in sections
+        for grade in section.get("grades", [])
+    ]
+    total_fixtures = sum(len(grade.get("fixtures", [])) for _, _, grade in grades)
+
+    if not grades:
+        raise ScrapeError("scrape produced no grades; refusing to overwrite fixtures.json")
+
+    if total_fixtures == 0:
+        raise ScrapeError("scrape produced no fixtures; refusing to overwrite fixtures.json")
+
+    if allow_empty_grades:
+        return
+
+    empty_grades = [
+        f"{section_label} / {grade_label}"
+        for section_label, grade_label, grade in grades
+        if not grade.get("fixtures")
+    ]
+    if empty_grades:
+        preview = ", ".join(empty_grades[:6])
+        if len(empty_grades) > 6:
+            preview += f", and {len(empty_grades) - 6} more"
+        raise ScrapeError(f"scrape produced no fixtures for {preview}; refusing to overwrite fixtures.json")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Update fixtures.json from Hockey Victoria")
-    parser.add_argument("--dry-run",  action="store_true", help="Print JSON to stdout, don't write file")
-    parser.add_argument("--config",   default=str(CONFIG_FILE), help="Path to team config JSON")
-    parser.add_argument("--output",   default=str(OUTPUT_FILE), help="Path to write fixtures.json")
+    parser.add_argument("--dry-run", action="store_true", help="Print JSON to stdout, don't write file")
+    parser.add_argument("--allow-empty-grades", action="store_true", help="Allow individual grades with no fixtures")
+    parser.add_argument("--config", default=str(CONFIG_FILE), help="Path to team config JSON")
+    parser.add_argument("--output", default=str(OUTPUT_FILE), help="Path to write fixtures.json")
     args = parser.parse_args()
 
     config_path = Path(args.config)
@@ -226,7 +262,12 @@ def main() -> None:
         config = json.load(fh)
 
     print(f"Scraping fixtures for {config.get('season', 'unknown')} season …")
-    result = build_fixtures_json(config)
+    try:
+        result = build_fixtures_json(config)
+        validate_fixture_output(result, allow_empty_grades=args.allow_empty_grades)
+    except ScrapeError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        sys.exit(1)
 
     if args.dry_run:
         print("\n── fixtures.json (dry run) ──────────────────────────")
