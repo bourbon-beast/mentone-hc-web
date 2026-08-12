@@ -32,7 +32,7 @@ $mascot = esc_url( get_theme_file_uri( 'assets/images/panther-mascot.png' ) );
 				<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://www.revolutionise.com.au/mentonehockey/club-registrations">Register for 2026</a></div>
 				<!-- /wp:button -->
 				<!-- wp:button {"className":"is-style-ghost"} -->
-				<div class="wp-block-button is-style-ghost"><a class="wp-block-button__link wp-element-button">New to hockey?</a></div>
+				<div class="wp-block-button is-style-ghost"><a class="wp-block-button__link wp-element-button" href="/new-players/">New to hockey?</a></div>
 				<!-- /wp:button -->
 			</div>
 			<!-- /wp:buttons -->
