@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-18",
+  "updated": "2026-08-25",
   "sections": [
     {
       "id": "mens",
@@ -183,7 +183,7 @@
               "time": "3:30pm",
               "opponent": "Waverley Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             }
           ]
         },
@@ -332,7 +332,7 @@
               "time": "5:00pm",
               "opponent": "Waverley Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             }
           ]
         },
@@ -481,7 +481,7 @@
               "time": "12:30pm",
               "opponent": "PEGS Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "W"
             }
           ]
         },
@@ -622,7 +622,7 @@
               "time": "6:30pm",
               "opponent": "Brunswick Hockey Club",
               "venue": "Away",
-              "result": "L"
+              "result": "W"
             },
             {
               "date": "2026-08-22",
@@ -630,7 +630,7 @@
               "time": "2:00pm",
               "opponent": "Greensborough Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "L"
             }
           ]
         },
@@ -779,7 +779,7 @@
               "time": "3:30pm",
               "opponent": "Doncaster Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             }
           ]
         },
@@ -928,7 +928,7 @@
               "time": "12:30pm",
               "opponent": "Frankston Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "W"
             }
           ]
         }
@@ -1088,7 +1088,7 @@
               "time": "4:00pm",
               "opponent": "Camberwell Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             }
           ]
         },
@@ -1237,7 +1237,7 @@
               "time": "12:30pm",
               "opponent": "Casey Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             }
           ]
         },
@@ -1386,7 +1386,7 @@
               "time": "12:30pm",
               "opponent": "Waverley Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             }
           ]
         },
@@ -1535,7 +1535,7 @@
               "time": "2:00pm",
               "opponent": "St. Bede's Hockey Club",
               "venue": "Home",
-              "result": null
+              "result": "W"
             }
           ]
         },
@@ -1684,7 +1684,7 @@
               "time": "12:30pm",
               "opponent": "Old Haileyburians' Association Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             }
           ]
         }
@@ -1840,7 +1840,7 @@
               "time": "2:00pm",
               "opponent": "KBH Brumbies Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             }
           ]
         },
@@ -1989,7 +1989,7 @@
               "time": "3:30pm",
               "opponent": "Eastern Christian Hockey Organisation (ECHO)",
               "venue": "Away",
-              "result": null
+              "result": "L"
             }
           ]
         },
@@ -2443,7 +2443,7 @@
               "time": "3:30pm",
               "opponent": "Camberwell Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "D"
             }
           ]
         },
@@ -2592,7 +2592,7 @@
               "time": "2:00pm",
               "opponent": "Old East Malvern Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             }
           ]
         },
@@ -2741,7 +2741,7 @@
               "time": "2:30pm",
               "opponent": "Waverley Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "W"
             }
           ]
         },
@@ -2890,7 +2890,7 @@
               "time": "2:00pm",
               "opponent": "Camberwell Hockey Club",
               "venue": "Away",
-              "result": null
+              "result": "L"
             }
           ]
         }
