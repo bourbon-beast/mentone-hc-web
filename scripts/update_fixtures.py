@@ -105,31 +105,43 @@ def determine_result(block: str, status: str) -> str | None:
     return {"Win": "W", "Loss": "L", "Draw": "D"}.get(m.group(1))
 
 
-def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
-    """
-    Scrape one HV team page and return a list of fixture dicts matching the
-    fixtures.json schema:
-        { date, day, time, opponent, venue, result }
-    """
-    print(f"  Fetching {grade_label} … {team_url}", flush=True)
-    try:
-        soup = fetch_soup(team_url)
-    except Exception as exc:
-        print(f"    WARNING: could not fetch page — {exc}", file=sys.stderr)
-        return []
+ROUND_LABEL_RE = re.compile(r"^Round\s+(\d+)$")
+# HV finals cards use a <b>Finals</b> header plus a subtype such as
+# <b>Elimination Final</b> in the same card. Match the subtype so each
+# finals game is unique; the bare "Finals" header would collapse every
+# subsequent final into one seen-key.
+FINALS_LABEL_RE = re.compile(
+    r"^(Elimination Final|Qualifying Final|Semi(?:[-\s])Final|"
+    r"Preliminary Final|Grand Final)$",
+    re.I,
+)
 
+
+def parse_fixtures_from_soup(soup: BeautifulSoup) -> list[dict]:
+    """
+    Extract fixture dicts from a Hockey Victoria team-page soup.
+    Schema: { date, day, time, opponent, venue, result }
+    """
     fixtures = []
     seen_rounds: set[int] = set()
+    seen_finals: set[str] = set()
 
     for b_tag in soup.find_all("b"):
         text = b_tag.get_text(strip=True)
-        m = re.match(r"^Round\s+(\d+)$", text)
-        if not m:
+        round_match = ROUND_LABEL_RE.match(text)
+        finals_match = FINALS_LABEL_RE.match(text)
+        if round_match:
+            round_num = int(round_match.group(1))
+            if round_num in seen_rounds:
+                continue
+            seen_rounds.add(round_num)
+        elif finals_match:
+            final_key = finals_match.group(1).casefold()
+            if final_key in seen_finals:
+                continue
+            seen_finals.add(final_key)
+        else:
             continue
-        round_num = int(m.group(1))
-        if round_num in seen_rounds:
-            continue
-        seen_rounds.add(round_num)
 
         # Walk up until we have both a /venues/ link and a /games/team/ link
         container = b_tag.find_parent()
@@ -180,6 +192,22 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
 
     fixtures.sort(key=lambda f: f["date"] or "")
     return fixtures
+
+
+def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
+    """
+    Scrape one HV team page and return a list of fixture dicts matching the
+    fixtures.json schema:
+        { date, day, time, opponent, venue, result }
+    """
+    print(f"  Fetching {grade_label} … {team_url}", flush=True)
+    try:
+        soup = fetch_soup(team_url)
+    except Exception as exc:
+        print(f"    WARNING: could not fetch page — {exc}", file=sys.stderr)
+        return []
+
+    return parse_fixtures_from_soup(soup)
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────

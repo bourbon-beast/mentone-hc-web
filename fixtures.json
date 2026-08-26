@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-25",
+  "updated": "2026-08-26",
   "sections": [
     {
       "id": "mens",
@@ -482,6 +482,14 @@
               "opponent": "PEGS Hockey Club",
               "venue": "Home",
               "result": "W"
+            },
+            {
+              "date": "2026-08-30",
+              "day": "Sun",
+              "time": "5:00pm",
+              "opponent": "Camberwell Hockey Club",
+              "venue": "Away",
+              "result": null
             }
           ]
         },
@@ -780,6 +788,14 @@
               "opponent": "Doncaster Hockey Club",
               "venue": "Away",
               "result": "W"
+            },
+            {
+              "date": "2026-08-29",
+              "day": "Sat",
+              "time": "1:00pm",
+              "opponent": "Doncaster Hockey Club",
+              "venue": "Home",
+              "result": null
             }
           ]
         },
@@ -929,6 +945,14 @@
               "opponent": "Frankston Hockey Club",
               "venue": "Home",
               "result": "W"
+            },
+            {
+              "date": "2026-08-30",
+              "day": "Sun",
+              "time": "2:00pm",
+              "opponent": "Maccabi Hockey Club",
+              "venue": "Home",
+              "result": null
             }
           ]
         }
@@ -1387,6 +1411,14 @@
               "opponent": "Waverley Hockey Club",
               "venue": "Away",
               "result": "L"
+            },
+            {
+              "date": "2026-08-29",
+              "day": "Sat",
+              "time": "3:00pm",
+              "opponent": "MCC Hockey Section",
+              "venue": "Home",
+              "result": null
             }
           ]
         },
@@ -1536,6 +1568,14 @@
               "opponent": "St. Bede's Hockey Club",
               "venue": "Home",
               "result": "W"
+            },
+            {
+              "date": "2026-08-29",
+              "day": "Sat",
+              "time": "4:00pm",
+              "opponent": "Cardinia Storm Hockey Club",
+              "venue": "Away",
+              "result": null
             }
           ]
         },
@@ -2593,6 +2633,14 @@
               "opponent": "Old East Malvern Hockey Club",
               "venue": "Away",
               "result": "L"
+            },
+            {
+              "date": "2026-08-29",
+              "day": "Sat",
+              "time": "1:00pm",
+              "opponent": "La Trobe University Hockey Club",
+              "venue": "Away",
+              "result": null
             }
           ]
         },
@@ -2742,6 +2790,14 @@
               "opponent": "Waverley Hockey Club",
               "venue": "Away",
               "result": "W"
+            },
+            {
+              "date": "2026-08-29",
+              "day": "Sat",
+              "time": "12:30pm",
+              "opponent": "Toorak East Malvern Hockey Club",
+              "venue": "Away",
+              "result": null
             }
           ]
         },
