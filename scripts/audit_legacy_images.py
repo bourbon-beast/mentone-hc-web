@@ -3,7 +3,7 @@ and check whether each one is already downloaded locally."""
 import re
 from pathlib import Path
 
-ROOT = Path(r"F:\Documents\Steve\Development\mentone-hc-web\legacy-content")
+ROOT = Path(r"E:\Documents\Steve\Development\personal\mentone-hc-web\legacy-content")
 MARKDOWN_DIR = ROOT / "markdown"
 UPLOADS_DIR = ROOT / "uploads"
 
