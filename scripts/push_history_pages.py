@@ -29,9 +29,10 @@ HUB_PAGES = ['best-and-fairest', 'club-awards', 'life-members',
              'heritage-traditions', 'club-song', '25th-anniversary-team']
 
 HONOUR_BOARDS_HUB = """
-<section class="hb-hero"><div class="wrap"><div class="hb-hero-grade"><span class="eyebrow">Awards &amp; Records</span></div><h1>Honour <em>Boards</em></h1><div class="hb-hero-meta"><div class="hb-hero-meta-item"><span class="label">Boards</span><span class="value">35</span></div><div class="hb-hero-meta-item"><span class="label">Records</span><span class="value">All eras</span></div></div></div></section>
+<section class="hb-hero"><div class="wrap"><div class="hb-hero-grade"><span class="eyebrow">Awards &amp; Records</span></div><h1>Honour <em>Boards</em></h1><div class="hb-hero-meta"><div class="hb-hero-meta-item"><span class="label">Boards</span><span class="value">{count}</span></div><div class="hb-hero-meta-item"><span class="label">Records</span><span class="value">All eras</span></div></div></div></section>
 <div class="wrap">
 <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a><span class="breadcrumb-sep">›</span><a href="/history/">Awards &amp; Records</a><span class="breadcrumb-sep">›</span><span>Honour Boards</span></nav>
+{board_index}
 <div class="related-links" style="margin:32px 0 64px;">
   <a class="related-link" href="/history/best-and-fairest/"><strong>Best &amp; Fairest</strong> — every team, every season on record</a>
   <a class="related-link" href="/history/club-awards/"><strong>Club Awards</strong> — club person, coaching and special awards</a>
@@ -39,6 +40,25 @@ HONOUR_BOARDS_HUB = """
 </div>
 </div>
 """
+
+HUB_GROUPS = [('mens-masters-', "Men's Masters"), ('womens-masters-', "Women's Masters"),
+              ('mens-', "Men's"), ('womens-', "Women's"), ('', 'Club &amp; Special Awards')]
+
+def build_board_index(boards):
+    """boards: [(slug, title)] -> grouped link lists for the hub page."""
+    grouped = {label: [] for _, label in HUB_GROUPS}
+    for slug, title in boards:
+        label = next(l for pre, l in HUB_GROUPS if slug.startswith(pre))
+        grouped[label].append((slug, title))
+    parts = []
+    for _, label in HUB_GROUPS:
+        if not grouped[label]:
+            continue
+        links = '\n'.join(
+            f'  <a class="related-link" href="/history/honour-boards/{s}/"><strong>{t.replace("&", "&amp;")}</strong></a>'
+            for s, t in grouped[label])
+        parts.append(f'<h2 style="margin:48px 0 16px;">{label}</h2>\n<div class="related-links">\n{links}\n</div>')
+    return '\n'.join(parts)
 
 def api(path, method='GET', payload=None, binary=None, ctype=None, fname=None):
     auth = (ROOT / '.wp-auth').read_text().strip()
@@ -83,6 +103,8 @@ def rewrite_href(href, depth):
     else:
         if href == 'index.html':
             return '/history/' + anchor
+        if href in ('honour-boards/', 'honour-boards/index.html'):
+            return '/history/honour-boards/' + anchor
         m = re.fullmatch(r'honour-boards/([\w-]+)\.html', href)
         if m:
             return f'/history/honour-boards/{m.group(1)}/' + anchor
@@ -136,12 +158,16 @@ def main():
     for i, slug in enumerate(HUB_PAGES):
         t, c = convert(ROOT / 'history' / f'{slug}.html', 1)
         pages.append((slug, 'history', t, c, i + 1))
-    pages.append(('honour-boards', 'history', 'Honour Boards',
-                  '<!-- wp:html -->\n' + HONOUR_BOARDS_HUB.strip() + '\n<!-- /wp:html -->',
-                  len(HUB_PAGES) + 1))
+    boards = []
     for i, f in enumerate(sorted((ROOT / 'history' / 'honour-boards').glob('*.html'))):
         t, c = convert(f, 2)
-        pages.append((f.stem, 'honour-boards', t, c, i))
+        boards.append((f.stem, 'honour-boards', t, c, i))
+    hub = HONOUR_BOARDS_HUB.format(count=len(boards),
+                                   board_index=build_board_index([(s, t) for s, _, t, _, _ in boards]))
+    pages.append(('honour-boards', 'history', 'Honour Boards',
+                  '<!-- wp:html -->\n' + hub.strip() + '\n<!-- /wp:html -->',
+                  len(HUB_PAGES) + 1))
+    pages.extend(boards)
 
     media_files = sorted({m for _, _, _, c, _ in pages for m in re.findall(r'\{\{MEDIA:([^}]+)\}\}', c)})
     print(f'{len(pages)} pages, {len(media_files)} legacy images')
