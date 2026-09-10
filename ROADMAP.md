@@ -42,9 +42,11 @@ More slots get added here as the gallery page and other patterns pick up photo h
 
 Rationale: the homepage Instagram section is a designed thing (navy band, square tiles, 2px radius, 0.8→1 opacity hover, "See more" as the sixth cell — see `index.html` lines 174-209). Anything that renders in a third-party iframe (Meta's Page Plugin, most widget services) loads its own CSS and cannot be made to look like that. Only options that hand us raw data or overridable markup are viable, and of those, a JSON proxy is the one that adds no plugin and no token-refresh cron of our own.
 
+**Placement (decided 2026-09-10, later):** the **news page**, not the homepage. The news page is the WP posts archive rendered by `theme/mentone/templates/index.html` — a *template*, so a dynamic block there renders at request time and the pattern/insert-time problem below goes away entirely; the section appends under the query loop. Editorially it's the better fit too: on the homepage the grid competed with `news-grid.php` for the same "what's happening" job, whereas on the news page it complements the posts (long-form above, informal stream below) and fills out a page that's still thin. Accepted cost: far fewer eyeballs than the homepage. Render on **archive page 1 only** so it doesn't repeat through pagination. Homepage keeps `news-grid.php` and does *not* get an Instagram section for now.
+
 **Shape of the build:**
 - Connect `@mentone_hc` to [Behold](https://behold.so) (free tier: 1 source, 1 feed, daily refresh) — it holds the OAuth connection and handles Instagram's 60-day token refresh for us. [Feedframer](https://feedframer.com) is the equivalent fallback.
-- Small **dynamic block** `mentone/instagram-feed` (a `render_callback`, *not* a static pattern — pattern PHP runs at insert time, we need it at render time) that does `wp_remote_get()` on the JSON feed, wrapped in a `set_transient()` cache (12–24h, matching the free tier's daily refresh).
+- Small **dynamic block** `mentone/instagram-feed` (a `render_callback` registered in `functions.php` — currently 54 lines with no blocks or shortcodes registered, so this is the first) that does `wp_remote_get()` on the JSON feed, wrapped in a `set_transient()` cache (12–24h, matching the free tier's daily refresh). Dropped into `templates/index.html` below the query loop, guarded to page 1.
 - Renders into the existing grid markup verbatim. No plugin installed, no editor surface a volunteer can break.
 - Server-side caching means a handful of API requests a month, not one per visitor — comfortably inside the free tier. ⚑ Confirm how Behold meters JSON-feed requests vs widget page loads before relying on it.
 - **Fallback:** commit the six static tiles as the block's no-data state, so an API failure or a dead token degrades to the current mockup rather than an empty navy band.
@@ -64,7 +66,7 @@ Rationale: the homepage Instagram section is a designed thing (navy band, square
 - Reels use the thumbnail, never autoplay
 - Real `alt` text from the caption's first sentence (current mockup has all six as "Mentone Hockey Club")
 
-Note the porting target changed on 2026-09-10: the homepage is now page 4894 (`content/pages/home.html`), not `front-page.html`, so the section chrome is ordinary blocks in the page with the dynamic block dropped in.
+Superseded note: an earlier version of this decision targeted the homepage, which since 2026-09-10 is page 4894 (`content/pages/home.html`) rather than `front-page.html`. Moot now that placement is the news archive template.
 
 ---
 
