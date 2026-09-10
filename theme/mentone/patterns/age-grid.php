@@ -28,7 +28,7 @@
 		<div class="age-card">
 			<div class="age-card-num">5–10</div>
 			<div class="age-card-label">Hook in2</div>
-			<p>Thursday afternoons. No experience needed — just turn up.</p>
+			<p>Sunday mornings, 10–11am. No experience needed — just turn up.</p>
 		</div>
 		<div class="age-card">
 			<div class="age-card-num">U8 · U10</div>

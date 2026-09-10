@@ -17,8 +17,8 @@
 			<div class="hook-badge">★ For Kids · Ages 5–11</div>
 			<div class="hook-visual-title">Hook in2<br/><em>Hockey.</em></div>
 			<div class="hook-visual-meta">
-				<div><div class="hook-meta-label">When</div><div class="hook-meta-value">Thursdays</div></div>
-				<div><div class="hook-meta-label">Time</div><div class="hook-meta-value">5:15–6:00pm</div></div>
+				<div><div class="hook-meta-label">When</div><div class="hook-meta-value">Sundays</div></div>
+				<div><div class="hook-meta-label">Time</div><div class="hook-meta-value">10:00–11:00am</div></div>
 				<div><div class="hook-meta-label">Where</div><div class="hook-meta-value">Mentone HG</div></div>
 				<div><div class="hook-meta-label">Bring</div><div class="hook-meta-value">Just yourself</div></div>
 			</div>

@@ -30,6 +30,7 @@ Running list of fixes found while walking the live install (theme v0.3.0). Newes
 - **Page-push workflow:** author block markup in `content/pages/<slug>.html` → `POST /wp-json/wp/v2/pages` with `{"template":"page-patterns","status":"draft",...}` — strip the repo header comment, check slug collisions against pages *and* media first (the `/juniors/` attachment lesson).
 
 ## Whole-site scan — TODO
+- [ ] **Steve: theme upload pending** — `hook-in2.php` and `age-grid.php` now carry the Term 4 Hook in2 times (Sundays 10–11am), but theme patterns only reach live via a theme zip upload, not the REST API. The **homepage feature still says Thursdays 5:15–6:00pm** until that upload happens. Not publicly visible while the homepage sits behind the 301, but it must go up before launch. The `/juniors/` page is already correct — its copy is page content, pushed 2026-09-10.
 - [x] **Theme v0.3.5 uploaded & active** (verified live 2026-08-04): fees-table styling, footer Resources link, home This-Week training card fix all shipped.
 - [ ] **Waiting on Steve (⚑ list):** premiership records (page skipped — no data); resources link-set review (prune/extend `/resources/`); decision: point site-wide Register buttons at Majestri instead of revolutionise? *(2026-09-10: the stubbed key-dates strip was pulled from `/new-players/` rather than left half-empty — `git revert e46f521` and re-push to bring it back once HV confirms the 2026 draw and you have real dates.)*
 - [ ] **Re-survey members after launch** — the July feedback CSV predates the rebuild.
