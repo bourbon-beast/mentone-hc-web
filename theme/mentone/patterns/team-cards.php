@@ -37,7 +37,7 @@
 		</a>
 		<a href="/juniors" class="team-card" data-team="juniors">
 			<div class="team-card-bg"></div>
-			<div class="team-card-inner"><div><div class="team-card-name">Juniors</div><div class="team-count">Hook in2 → U18</div></div></div>
+			<div class="team-card-inner"><div><div class="team-card-name">Juniors</div><div class="team-count">Beginners → U18</div></div></div>
 			<div class="team-card-arrow"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h8M7 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
 		</a>
 		<a href="/masters" class="team-card" data-team="masters">

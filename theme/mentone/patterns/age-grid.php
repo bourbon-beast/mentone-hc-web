@@ -27,8 +27,8 @@
 	<div class="age-grid-4 alignwide">
 		<div class="age-card">
 			<div class="age-card-num">5–10</div>
-			<div class="age-card-label">Hook in2</div>
-			<p>Sunday mornings, 10–11am. No experience needed — just turn up.</p>
+			<div class="age-card-label">Beginner Clinics</div>
+			<p>Free Sunday-morning clinics, 10–11am. No experience needed — just book a place.</p>
 		</div>
 		<div class="age-card">
 			<div class="age-card-num">U8 · U10</div>
