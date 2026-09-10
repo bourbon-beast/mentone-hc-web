@@ -15,7 +15,7 @@ Tracking: [Trello board](https://trello.com/b/7p58DMLL/mentone-website) · Platf
 **Ranked remainder:**
 - *Tier 1 (blocked on club input):* season key-dates strip (⚑ start/end, holiday breaks), premierships page (⚑ no real data exists — legacy page was placeholder junk).
 - *Tier 2 (content depth):* junior programs beyond H2H (roadshows, Nov/Dec clinic, U8/U10 comp ⚑), RVL explainer + points-jobs list ⚑, governance/policy library (Phase 2), photo/video refresh ⚑ (scoped 2026-07-10, see below), representative players page.
-- *Tier 3 (features):* fixtures/upcoming games all sections (parked GCP side project — 2 of 3 respondents want it), social feed embeds (scoped 2026-07-10, see below), email signup, sponsors showcase, members-only area (team lists, rosters, process docs — needs auth decision; interim channel = news posts + announce bar).
+- *Tier 3 (features):* fixtures/upcoming games all sections (parked GCP side project — 2 of 3 respondents want it), social feed embeds (**decided 2026-09-10** — live IG feed via JSON proxy + own markup, see below; blocked on the account being Professional), email signup, sponsors showcase, members-only area (team lists, rosters, process docs — needs auth decision; interim channel = news posts + announce bar).
 - *Ops, not build:* team vacancies, ball-kid roster, social calendar, big-match promotion.
 
 ⚑ also outstanding: should site-wide Register buttons point at Majestri (`mentonehockey.majestri.com.au/2026-winter-season`) instead of revolutionise `club-registrations`?
@@ -36,14 +36,35 @@ Steve's feedback: the site needs more photos of people. Two moves, not competing
 
 More slots get added here as the gallery page and other patterns pick up photo hooks.
 
-### Social feed embeds (Instagram) — scoped 2026-07-10
+### Social feed embeds (Instagram) — DECIDED 2026-09-10
 
-Current state: the homepage Instagram section is only a static mockup in the design reference (`index.html` lines 184-218, 5 hardcoded images) — it was never ported into the WordPress build (`theme/mentone/templates/front-page.html` doesn't include it). Porting it is outstanding work regardless of which option below gets picked.
+**Decision: live Instagram feed via a JSON proxy service, rendered by our own markup.** Not an embed, not a feed plugin.
 
-- **Option A — live embed:** Graph API integration or a paid plugin (SnapWidget/Elfsight). Real auto-sync, but needs a Meta Business/Creator account link, app review, and ongoing token/plugin upkeep.
-- **Option B — curated grid (leaning this way):** port the existing mockup into a real pattern (`patterns/instagram-feed.php`), Steve swaps images/links occasionally by hand. No API, no ongoing maintenance cost.
+Rationale: the homepage Instagram section is a designed thing (navy band, square tiles, 2px radius, 0.8→1 opacity hover, "See more" as the sixth cell — see `index.html` lines 174-209). Anything that renders in a third-party iframe (Meta's Page Plugin, most widget services) loads its own CSS and cannot be made to look like that. Only options that hand us raw data or overridable markup are viable, and of those, a JSON proxy is the one that adds no plugin and no token-refresh cron of our own.
 
-Decision deferred — Steve to pick once ready.
+**Shape of the build:**
+- Connect `@mentone_hc` to [Behold](https://behold.so) (free tier: 1 source, 1 feed, daily refresh) — it holds the OAuth connection and handles Instagram's 60-day token refresh for us. [Feedframer](https://feedframer.com) is the equivalent fallback.
+- Small **dynamic block** `mentone/instagram-feed` (a `render_callback`, *not* a static pattern — pattern PHP runs at insert time, we need it at render time) that does `wp_remote_get()` on the JSON feed, wrapped in a `set_transient()` cache (12–24h, matching the free tier's daily refresh).
+- Renders into the existing grid markup verbatim. No plugin installed, no editor surface a volunteer can break.
+- Server-side caching means a handful of API requests a month, not one per visitor — comfortably inside the free tier. ⚑ Confirm how Behold meters JSON-feed requests vs widget page loads before relying on it.
+- **Fallback:** commit the six static tiles as the block's no-data state, so an API failure or a dead token degrades to the current mockup rather than an empty navy band.
+
+**Gates (blocking, club-side):**
+- ⚑ `@mentone_hc` must be a **Professional account** (Business or Creator — free switch, keeps handle and followers). Instagram Basic Display API was switched off 4 Dec 2024; personal accounts have no official API path at all. If it stays personal, we ship the static fallback and nothing else.
+- ⚑ Who holds the Instagram login / can authorise the OAuth connection? If that rotates annually with committee, the proxy service (connection lives at Behold, not on our server) is the right call — which is what we picked.
+
+**Facebook: deliberately not doing it.** The Page Plugin is a hard-capped ~500px unstylable iframe (and Meta killed the Like/Comment plugins on 10 Feb 2026); pulling Page posts via Graph needs an app review. Club Facebook content is near-duplicated to Instagram anyway. Footer link to facebook.com/mentonehockeyclub only.
+
+**Design rules for the grid** (these are what separate it from looking like rubbish):
+- Locked `aspect-ratio:1` + `object-fit:cover` — ragged tile heights are the giveaway
+- Image only, **no captions** in the grid (long, emoji-heavy, hashtag-laden — they wreck the typography)
+- No Instagram chrome: no like counts, no avatar header, no "Powered by" badge
+- Reserve the space with explicit dimensions so a slow API can't shift the navy band
+- Cap at 6, never a carousel or infinite scroll — "See more" does that job
+- Reels use the thumbnail, never autoplay
+- Real `alt` text from the caption's first sentence (current mockup has all six as "Mentone Hockey Club")
+
+Note the porting target changed on 2026-09-10: the homepage is now page 4894 (`content/pages/home.html`), not `front-page.html`, so the section chrome is ordinary blocks in the page with the dynamic block dropped in.
 
 ---
 
