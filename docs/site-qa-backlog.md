@@ -31,7 +31,7 @@ Running list of fixes found while walking the live install (theme v0.3.0). Newes
 
 ## Whole-site scan — TODO
 - [x] **Theme v0.3.5 uploaded & active** (verified live 2026-08-04): fees-table styling, footer Resources link, home This-Week training card fix all shipped.
-- [ ] **Waiting on Steve (⚑ list):** 2026 season start/end + holiday-break dates (key-dates strip is stubbed with rego + H2H only); premiership records (page skipped — no data); resources link-set review (prune/extend `/resources/`); decision: point site-wide Register buttons at Majestri instead of revolutionise?
+- [ ] **Waiting on Steve (⚑ list):** premiership records (page skipped — no data); resources link-set review (prune/extend `/resources/`); decision: point site-wide Register buttons at Majestri instead of revolutionise? *(2026-09-10: the stubbed key-dates strip was pulled from `/new-players/` rather than left half-empty — `git revert e46f521` and re-push to bring it back once HV confirms the 2026 draw and you have real dates.)*
 - [ ] **Re-survey members after launch** — the July feedback CSV predates the rebuild.
 - [ ] Walk every published page under the new theme and log issues here.
 - [ ] Iterate nav/footer from feedback once the first working model is being shown around.
