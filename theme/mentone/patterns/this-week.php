@@ -3,7 +3,7 @@
  * Title: This week (fixtures, training, club rooms)
  * Slug: mentone/this-week
  * Categories: mentone
- * Description: Navy section with three cards — weekend fixtures list, training times, club rooms. Edit fixture rows in the HTML block; long-term this becomes a dynamic block fed by fixtures data.
+ * Description: Navy section with two cards — training times and club rooms. The weekend fixtures card was removed 2026-09-10 (it held fabricated sample matches); reinstate it as a dynamic block fed by fixtures.json rather than hand-edited rows.
  */
 ?>
 <!-- wp:group {"metadata":{"name":"This week"},"className":"this-week","backgroundColor":"navy","textColor":"cream","style":{"spacing":{"padding":{"top":"var:preset|spacing|90","bottom":"var:preset|spacing|90","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained","wideSize":"1240px"}} -->
@@ -21,17 +21,7 @@
 	<!-- /wp:group -->
 
 	<!-- wp:html -->
-	<div class="week-grid alignwide">
-		<div class="week-card">
-			<div class="week-card-label">Weekend Fixtures</div>
-			<div class="week-card-title">This weekend on the turf</div>
-			<ul class="fixtures-list">
-				<li><span class="fix-day">Sat</span><div class="fix-teams">Men's Premier League<small>vs Waverley · Home</small></div><span class="fix-time">3:00pm</span></li>
-				<li><span class="fix-day">Sat</span><div class="fix-teams">Women's Premier League<small>vs Hawthorn · Away</small></div><span class="fix-time">5:00pm</span></li>
-				<li><span class="fix-day">Sun</span><div class="fix-teams">Juniors U14 Boys<small>vs Doncaster · Home</small></div><span class="fix-time">9:30am</span></li>
-				<li><span class="fix-day">Sun</span><div class="fix-teams">Men's Masters 45<small>vs Camberwell · Away</small></div><span class="fix-time">11:00am</span></li>
-			</ul>
-		</div>
+	<div class="week-grid week-grid--two alignwide">
 		<div class="week-card">
 			<div class="week-card-label">Training</div>
 			<div class="week-card-title">Turn up, get stuck in</div>

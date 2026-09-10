@@ -32,13 +32,45 @@ itself, so it silently drifts behind live unless someone commits.
    behind fast and an unpushed local commit is easy to lose.
 4. **Every content change touches two sources**: the static reference at repo root
    (e.g. `uniforms.html`) and the WP block source (`content/pages/uniforms.html`).
-   Update both, or note explicitly why not.
+   Update both, or note explicitly why not. The homepage follows this too:
+   `index.html` and `content/pages/home.html`.
 5. **Log what shipped** in `docs/site-qa-backlog.md` as part of the same commit.
 
 Working state should be clean at the end of a session. `git status` showing a pile
 of modified content files means the repo and live have diverged.
 
 ---
+
+## The homepage is a normal page now (2026-09-10)
+
+It used to be the exception: `templates/front-page.html` pulled eight patterns in
+with `<!-- wp:pattern -->`, which renders theme PHP at request time. That made the
+**theme** the content store for the homepage - so changing a word meant editing PHP,
+rebuilding the zip and uploading through wp-admin, and the REST API couldn't touch it.
+
+Now:
+
+- **Homepage content lives in page 4894** (`page_on_front`, title "Home", slug
+  `new-home`). Repo source: `content/pages/home.html`. Edit and push it exactly like
+  any other page.
+- **`templates/front-page.html` is a structural shell** - header, `post-content`,
+  footer, byte-identical to `page-patterns.html`. It exists so the front page keeps
+  full-bleed zero-gap rendering rather than the constrained wrapper `page.html`
+  applies. Don't put content back in it.
+- **The eight homepage patterns are seeds, not the live homepage.** Editing
+  `patterns/hero-home.php`, `this-week.php` etc. will **not** change what visitors
+  see. They're starting content for building new pages. If you want a pattern edit
+  to reach the homepage, make the same edit in `content/pages/home.html` and push it.
+
+Two consequences worth knowing:
+
+- `hero-home.php` uses PHP for the mascot URL. Page content can't run PHP, so
+  `content/pages/home.html` references the media-library copy (id 5208) instead.
+- About 31% of the homepage content sits inside 8 `wp:html` blocks (the card grids -
+  team cards, week cards, hook visual, sponsors, awards tiles, hero stat strip).
+  Headings, paragraphs and buttons are proper blocks a volunteer can edit normally;
+  those grids need the HTML block. That's inherited from how the patterns were
+  written, not from this change.
 
 ## Access
 

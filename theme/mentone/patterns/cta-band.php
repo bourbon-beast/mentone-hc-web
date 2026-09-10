@@ -19,7 +19,7 @@
 	<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
 	<div class="wp-block-buttons">
 		<!-- wp:button -->
-		<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">Register now</a></div>
+		<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://www.revolutionise.com.au/mentonehockey/club-registrations" target="_blank" rel="noopener noreferrer">Register now</a></div>
 		<!-- /wp:button -->
 	</div>
 	<!-- /wp:buttons -->

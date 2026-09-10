@@ -3,7 +3,7 @@ Theme Name: Mentone Hockey Club
 Theme URI: https://mentonehockey.org.au
 Author: Mentone Hockey Club
 Description: Custom block theme for Mentone Hockey Club — warm, editorial, sports-journal aesthetic. Navy / powder blue / yellow palette, Fraunces display type, Inter body. All design tokens live in theme.json; this file carries only the behaviours theme.json cannot express.
-Version: 0.3.5
+Version: 0.3.6
 Requires at least: 6.6
 Tested up to: 7.0
 Requires PHP: 8.0
@@ -356,6 +356,9 @@ h1 em, h2 em, .wp-block-heading em {
 .this-week .section-title { color: var(--cream); }
 .this-week .section-title em { color: var(--yellow-bright); }
 .week-grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 24px; }
+/* Two-card variant - used while the weekend fixtures card is out. Declared here
+   (not inline) so the max-width:960px rule below can still stack it on mobile. */
+.week-grid--two { grid-template-columns: 1fr 1fr; }
 .week-card {
   background: rgba(246,241,230,.04);
   border: 1px solid rgba(246,241,230,.1);
