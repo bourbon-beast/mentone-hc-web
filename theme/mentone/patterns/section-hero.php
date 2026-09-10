@@ -20,8 +20,8 @@
 
 		<!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|60"}}}} -->
 		<div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--60)">
-			<!-- wp:button -->
-			<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://www.revolutionise.com.au/mentonehockey/club-registrations">Register for 2026</a></div>
+			<!-- wp:button {"linkTarget":"_blank","rel":"noopener noreferrer"} -->
+			<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://www.revolutionise.com.au/mentonehockey/club-registrations" target="_blank" rel="noopener noreferrer">Register for 2026</a></div>
 			<!-- /wp:button -->
 			<!-- wp:button {"className":"is-style-ghost"} -->
 			<div class="wp-block-button is-style-ghost"><a class="wp-block-button__link wp-element-button" href="mailto:secretary@mentonehockey.org.au">Contact the coordinator</a></div>

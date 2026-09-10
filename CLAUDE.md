@@ -85,6 +85,12 @@ Two consequences worth knowing:
   301 catches the bare root plus query and bounces to revsport.
 
 ## Conventions
+- **External links open in a new tab.** Any `href` to a host other than
+  `mentonehockey.org.au` gets `target="_blank" rel="noopener noreferrer"` -
+  revolutionise, Majestri, Hockey Victoria, Hockey Australia, socials. For a
+  `wp:button`, set `linkTarget` and `rel` in the **block attributes** as well as on
+  the anchor; anchor-only attributes get dropped the next time someone saves that
+  block in the editor.
 
 - Pattern pages get the **"Pattern page (full-bleed)"** template, never the default
   `page.html` (which constrains `post-content` to 720px and caps every band inside it).
