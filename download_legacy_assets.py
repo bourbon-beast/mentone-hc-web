@@ -74,6 +74,26 @@ def log(msg, file_handle=None):
         file_handle.flush()
 
 
+UPLOADS_MARKER = "/wp-content/uploads/"
+LIVE_UPLOADS_BASE = "https://mentonehockey.org.au" + UPLOADS_MARKER
+
+
+def normalize_download_url(url):
+    """Rewrite stale WordPress attachment guids to the live public uploads URL.
+
+    Early Mentone exports stored guids under ``/wpdev/`` or
+    ``http://localhost/word/``. Those paths 404 today, but the same files are
+    served from ``https://mentonehockey.org.au/wp-content/uploads/...``.
+    Without this rewrite the downloader silently fails hundreds of assets.
+    """
+    parsed = urlparse(url)
+    path = parsed.path or ""
+    if UPLOADS_MARKER not in path:
+        return url
+    rel = path.split(UPLOADS_MARKER, 1)[1]
+    return LIVE_UPLOADS_BASE + rel
+
+
 def url_to_local_path(url, base_dir):
     """
     Convert a wp-content/uploads URL to a local path that preserves structure.
@@ -83,9 +103,8 @@ def url_to_local_path(url, base_dir):
     """
     parsed = urlparse(url)
     path = parsed.path
-    marker = "/wp-content/uploads/"
-    if marker in path:
-        rel = path.split(marker, 1)[1]
+    if UPLOADS_MARKER in path:
+        rel = path.split(UPLOADS_MARKER, 1)[1]
     else:
         # Just use the filename if structure is unknown
         rel = path.lstrip("/")
@@ -104,9 +123,18 @@ def download_one(session, url, local_path):
         if response.status_code != 200:
             return ("failed", f"HTTP {response.status_code}")
 
+        content_type = (response.headers.get("Content-Type") or "").lower()
+        if content_type.startswith("text/html"):
+            # Live site returns HTML 404 pages for dead paths; never keep them.
+            return ("failed", f"unexpected Content-Type: {content_type.split(';')[0]}")
+
         with open(local_path, "wb") as f:
             for chunk in response.iter_content(chunk_size=8192):
                 f.write(chunk)
+
+        if local_path.stat().st_size == 0:
+            local_path.unlink(missing_ok=True)
+            return ("failed", "empty body")
 
         return ("downloaded", f"{local_path.stat().st_size:,} bytes")
     except requests.exceptions.RequestException as e:
@@ -130,7 +158,7 @@ def collect_urls():
         for item in data:
             guid = item.get("guid")
             if guid and guid.startswith("http"):
-                urls.add(guid)
+                urls.add(normalize_download_url(guid))
         print(f"  Loaded {len(data)} URLs from _attachments.json")
     else:
         print(f"  WARNING: {ATTACHMENTS_JSON} not found - skipping attachments")
@@ -142,7 +170,7 @@ def collect_urls():
             for line in f:
                 line = line.strip()
                 if line.startswith("http"):
-                    urls.add(line)
+                    urls.add(normalize_download_url(line))
         added = len(urls) - before
         print(f"  Added {added} extra URLs from _image_urls_in_pages.txt")
     else:
