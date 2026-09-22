@@ -105,31 +105,53 @@ def determine_result(block: str, status: str) -> str | None:
     return {"Win": "W", "Loss": "L", "Draw": "D"}.get(m.group(1))
 
 
-def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
-    """
-    Scrape one HV team page and return a list of fixture dicts matching the
-    fixtures.json schema:
-        { date, day, time, opponent, venue, result }
-    """
-    print(f"  Fetching {grade_label} … {team_url}", flush=True)
-    try:
-        soup = fetch_soup(team_url)
-    except Exception as exc:
-        print(f"    WARNING: could not fetch page — {exc}", file=sys.stderr)
-        return []
+ROUND_LABEL_RE = re.compile(r"^Round\s+(\d+)$")
+# HV week-1 cards use a shared <b>Finals</b> header plus an inner subtype
+# (Elimination Final / Qualifying Final). Do not key on "Finals" itself —
+# that would collapse later finals that reuse the same header.
+# Week-2 cards use either:
+#   <b>Semi Finals</b> + inner <b>Semi Final 1</b>, or
+#   <b>Preliminary Finals</b> with no inner subtype.
+# Match both the inner subtype and the distinct round header; identity
+# dedupe below stops Semi Finals + Semi Final 1 from becoming two rows.
+FINALS_LABEL_RE = re.compile(
+    r"^(?:"
+    r"Elimination Final|"
+    r"Qualifying Final|"
+    r"Semi(?:[-\s])Finals?(?:\s+\d+)?|"
+    r"Preliminary Finals?|"
+    r"Grand Finals?"
+    r")$",
+    re.I,
+)
 
+
+def parse_fixtures_from_soup(soup: BeautifulSoup) -> list[dict]:
+    """
+    Extract fixture dicts from a Hockey Victoria team-page soup.
+    Schema: { date, day, time, opponent, venue, result }
+    """
     fixtures = []
     seen_rounds: set[int] = set()
+    seen_finals: set[str] = set()
+    seen_identities: set[tuple] = set()
 
     for b_tag in soup.find_all("b"):
         text = b_tag.get_text(strip=True)
-        m = re.match(r"^Round\s+(\d+)$", text)
-        if not m:
+        round_match = ROUND_LABEL_RE.match(text)
+        finals_match = FINALS_LABEL_RE.match(text)
+        if round_match:
+            round_num = int(round_match.group(1))
+            if round_num in seen_rounds:
+                continue
+            seen_rounds.add(round_num)
+        elif finals_match:
+            final_key = finals_match.group(0).casefold()
+            if final_key in seen_finals:
+                continue
+            seen_finals.add(final_key)
+        else:
             continue
-        round_num = int(m.group(1))
-        if round_num in seen_rounds:
-            continue
-        seen_rounds.add(round_num)
 
         # Walk up until we have both a /venues/ link and a /games/team/ link
         container = b_tag.find_parent()
@@ -169,6 +191,15 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
         status = "played" if "Played" in block else "upcoming"
         result = determine_result(block, status)
 
+        # Semi Finals + Semi Final 1 live on the same card; keep one row.
+        # Do not identity-dedupe Round-N rows — that would change the
+        # existing first-hit duplicate behaviour.
+        if finals_match:
+            identity = (date_iso, normalise_time(time_raw), opponent)
+            if identity in seen_identities:
+                continue
+            seen_identities.add(identity)
+
         fixtures.append({
             "date":     date_iso,
             "day":      day_str,
@@ -180,6 +211,22 @@ def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
 
     fixtures.sort(key=lambda f: f["date"] or "")
     return fixtures
+
+
+def parse_team_page(team_url: str, grade_label: str) -> list[dict]:
+    """
+    Scrape one HV team page and return a list of fixture dicts matching the
+    fixtures.json schema:
+        { date, day, time, opponent, venue, result }
+    """
+    print(f"  Fetching {grade_label} … {team_url}", flush=True)
+    try:
+        soup = fetch_soup(team_url)
+    except Exception as exc:
+        print(f"    WARNING: could not fetch page — {exc}", file=sys.stderr)
+        return []
+
+    return parse_fixtures_from_soup(soup)
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
