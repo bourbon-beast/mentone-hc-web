@@ -80,6 +80,12 @@ def url_to_local_path(url, base_dir):
 
     https://mentonehockey.org.au/wp-content/uploads/2023/10/KenPridgett.jpg
         -> base_dir/2023/10/KenPridgett.jpg
+
+    Some attachment guids use a double slash after uploads/
+    (``.../uploads//IMG_0130-edited.jpg``). The segment after the marker then
+    starts with ``/``, and ``Path(base_dir) / "/IMG_....jpg"`` discards
+    ``base_dir`` and resolves to the filesystem root. Always strip leading
+    slashes from the relative segment so downloads stay under ``base_dir``.
     """
     parsed = urlparse(url)
     path = parsed.path
@@ -88,8 +94,15 @@ def url_to_local_path(url, base_dir):
         rel = path.split(marker, 1)[1]
     else:
         # Just use the filename if structure is unknown
-        rel = path.lstrip("/")
-    return base_dir / rel
+        rel = path
+    rel = rel.lstrip("/")
+    if not rel or ".." in Path(rel).parts:
+        raise ValueError(f"refusing unsafe uploads path from URL: {url}")
+    local_path = (base_dir / rel).resolve()
+    base_resolved = base_dir.resolve()
+    if local_path != base_resolved and base_resolved not in local_path.parents:
+        raise ValueError(f"path escapes download dir for URL: {url}")
+    return local_path
 
 
 def download_one(session, url, local_path):
@@ -109,8 +122,9 @@ def download_one(session, url, local_path):
                 f.write(chunk)
 
         return ("downloaded", f"{local_path.stat().st_size:,} bytes")
-    except requests.exceptions.RequestException as e:
-        # Clean up partial file if any
+    except (requests.exceptions.RequestException, OSError) as e:
+        # Clean up partial file if any. OSError covers permission/path failures
+        # that must not abort the whole backup run.
         if local_path.exists():
             try:
                 local_path.unlink()
@@ -193,7 +207,14 @@ def main():
         log_fh.write("=" * 60 + "\n\n")
 
         for i, url in enumerate(urls, 1):
-            local_path = url_to_local_path(url, DOWNLOAD_DIR)
+            try:
+                local_path = url_to_local_path(url, DOWNLOAD_DIR)
+            except ValueError as e:
+                stats["failed"] += 1
+                failures.append((url, str(e)))
+                log(f"[{i:>4}/{total}] [XX] {url}  ->  FAILED: {e}", log_fh)
+                continue
+
             status, detail = download_one(session, url, local_path)
             stats[status] += 1
 

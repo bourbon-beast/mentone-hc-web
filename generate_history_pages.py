@@ -823,23 +823,126 @@ def generate_club_song():
     print("  OK  history/club-song.html")
 
 
-def generate_25th_anniversary():
-    md = read_md("494")
-    if not md:
-        print("  SKIP 25th-anniversary-team.html — no source")
-        return
+_ANNIVERSARY_ROLE = (
+    r"Goalkeeper|Fullback|Right Half|Centre Half|Left Half|"
+    r"Right Inner|Left Inner|Left Wing|Centre Forward|Right Wing"
+)
 
-    content_html = markdown2.markdown(md, extras=["tables"])
+
+def _fix_anniversary_text(text):
+    """Normalise legacy export glitches in anniversary lineup cells."""
+    text = " ".join(text.split())
+    # Truncated "Fullba" in the WP export (must not rewrite "Fullback")
+    text = re.sub(r"Fullba(?!ck)", "Fullback", text)
+    # Bold tags split "Anderton" across cells in the WP export
+    text = re.sub(r"Jackie\s+Anderto\s*n", "Jackie Anderton", text)
+    return text
+
+
+def _format_anniversary_cell(text):
+    text = _fix_anniversary_text(text)
+    if text.startswith("Reserves:"):
+        rest = text.split(":", 1)[1].strip()
+        return f"<strong>Reserves:</strong> {escape(rest)}"
+    if text.startswith("Coach:"):
+        rest = text.split(":", 1)[1].strip()
+        return f"Coach: <strong>{escape(rest)}</strong>"
+    m = re.match(rf"^(.+?)(\*?)\s+({_ANNIVERSARY_ROLE})$", text)
+    if m:
+        name, star, role = m.group(1).strip(), m.group(2), m.group(3)
+        return f"<strong>{escape(name)}</strong>{escape(star)} {escape(role)}"
+    return escape(text)
+
+
+def _anniversary_table_html(table):
+    rows = []
+    for tr in table.find_all("tr"):
+        cells = [_format_anniversary_cell(td.get_text(" ", strip=True)) for td in tr.find_all("td")]
+        if not cells:
+            continue
+        rows.append("<tr>" + "".join(f"<td>{c}</td>" for c in cells) + "</tr>")
+    return '<table class="anniversary-team">\n' + "\n".join(rows) + "\n</table>"
+
+
+def anniversary_content_html():
+    """
+    Build 25th Anniversary Team body HTML from the structured legacy HTML
+    tables. The markdown export is lossy: `---` becomes Setext headings and
+    life-member markers glued to bold (`**Name***`) make markdown2 swallow
+    the men's half line (Mark Thompson / Gordon Tansey).
+    """
+    legacy_path = ROOT / "legacy-content" / "494_25th-anniversary-team.html"
+    if not legacy_path.exists():
+        return ""
+    soup = BeautifulSoup(legacy_path.read_text(encoding="utf-8"), "html.parser")
+    tables = soup.find_all("table")
+    if len(tables) < 2:
+        return ""
+
+    mens_intro = (
+        "To commemorate the Old Mentonian Hockey Club's 25th Anniversary and the "
+        "grand opening of the Mentone Hockey Centre, a select group of current and "
+        "ex-players from the Men’s section were asked to come up with a ‘Legends Team’; "
+        "the team named on Saturday 17th March, 2001 was as follows:"
+    )
+    womens_history = (
+        "The Women’s Section was founded back in 1957 by Mrs. Hastings, a school "
+        "teacher at Mentone Girls High School. Originally known as the Mordialloc "
+        "Women’s Hockey Club, it was based adjacent to the Mordialloc Football Club, "
+        "until 1974 when it moved to the Walter Galt Reserve in Warren Road, Mordialloc. "
+        "Dressed in red and white harlequins, with a bottle green skirt and bottle green "
+        "socks with a red turn over, the Mordialloc Women’s Hockey club had its fair share "
+        "of success winning the first Premierships, in 1966 (D Grade) and the second in "
+        "1986 (WD3S). In 1992 the Mordialloc Women’s Hockey Club commenced talks with local "
+        "men’s hockey club The Old Mentonian’s, about the possibility of a merger. So it "
+        "was in 1993, the Old Mentonian’s entered their first open women’s teams competing "
+        "in Melbourne League 3, District 3 South and District 5 South. In 1997 the club "
+        "changed its name from the Old Mentonian's to the Mentone Hockey Club, uniting the "
+        "newly establish veteran and junior sections with the existing men’s and women’s "
+        "sections under the one name. With the new name came a new look as the club moved "
+        "from gold shirts with sky blue and navy trim to the navy blue shirt with gold and "
+        "sky diagonal stripes and the Mentone Panther on the chest. A lot may have changed "
+        "since then; however there are still a few original Mordialloc Women’s Hockey Club "
+        "members running around today."
+    )
+    womens_intro = (
+        "To commemorate the Old Mentonian Hockey Clubs 25th Anniversary and the grand "
+        "opening of the Mentone Hockey Centre, a select group of current and ex-players "
+        "from the women’s section were asked to come up with a ‘Legends Team’; the team "
+        "named on Saturday 17th March, 2001 was as follows:"
+    )
+    return f"""
+<h2>Men's Team</h2>
+<p>{escape(mens_intro)}</p>
+{_anniversary_table_html(tables[0])}
+<h2>Women's Team</h2>
+<p>{escape(womens_history)}</p>
+<p>{escape(womens_intro)}</p>
+{_anniversary_table_html(tables[1])}
+<p><em>* Life Members</em></p>
+"""
+
+
+def generate_25th_anniversary():
+    content_html = anniversary_content_html().strip()
+    if not content_html:
+        print("  SKIP 25th-anniversary-team.html — no structured legacy source")
+        return
 
     html = HEAD.format(
         page_title="25th Anniversary Team",
         meta_desc="The Mentone Hockey Club 25th Anniversary Team — named in 2001 to honour the best players from the club's first 25 years.",
         asset_prefix=HISTORY_ASSET_PREFIX,
     )
+    # Match the Awards & Records hub chrome used by the other history/*.html pages.
+    html = html.replace(
+        'href="{0}club-history.css"'.format(HISTORY_ASSET_PREFIX),
+        'href="{0}club-history.css?v=mobile-polish"'.format(HISTORY_ASSET_PREFIX),
+    )
     html += f"""
 <section class="hb-hero">
   <div class="wrap">
-    <div class="hb-hero-grade"><span class="eyebrow">Club History · 2001</span></div>
+    <div class="hb-hero-grade"><span class="eyebrow">Awards &amp; Records · 2001</span></div>
     <h1>25th Anniversary <em>Team</em></h1>
     <div class="hb-hero-meta">
       <div class="hb-hero-meta-item">
@@ -854,7 +957,7 @@ def generate_25th_anniversary():
   </div>
 </section>
 <div class="wrap">
-  {breadcrumb("25th Anniversary Team", home_href="../index.html", history_href="index.html")}
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a><span class="breadcrumb-sep">›</span><a href="index.html">Awards &amp; Records</a><span class="breadcrumb-sep">›</span><span>25th Anniversary Team</span></nav>
   <div class="hb-layout" style="grid-template-columns:1fr 280px">
     <div class="history-prose">
       {content_html}
@@ -863,20 +966,24 @@ def generate_25th_anniversary():
       <div class="sidebar-card">
         <div class="sidebar-card-head">Navigation</div>
         <div class="related-links">
-          <a href="index.html" class="related-link">Club History {ARROW_ICON}</a>
-          <a href="index.html#life-members" class="related-link">Life Members {ARROW_ICON}</a>
+          <a href="index.html" class="related-link">Awards &amp; Records {ARROW_ICON}</a>
+          <a href="life-members.html" class="related-link">Life Members {ARROW_ICON}</a>
         </div>
       </div>
     </aside>
   </div>
   <a href="index.html" class="back-link">
     <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 7H3M7 3l-4 4 4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    Back to Club History
+    Back to Awards &amp; Records
   </a>
   <div style="height:var(--space-8)"></div>
 </div>
 """
     html += FOOT.format(extra_js="", asset_prefix=HISTORY_ASSET_PREFIX)
+    html = html.replace(
+        'src="{0}partials.js"'.format(HISTORY_ASSET_PREFIX),
+        'src="{0}partials.js?v=awards-records"'.format(HISTORY_ASSET_PREFIX),
+    )
     (HISTORY_DIR / "25th-anniversary-team.html").write_text(html, encoding="utf-8")
     print("  OK  history/25th-anniversary-team.html")
 
