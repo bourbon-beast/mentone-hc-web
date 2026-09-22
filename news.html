@@ -247,7 +247,8 @@
       </div>`;
   };
 
-  function renderNews() {
+  // Must be on window: article "Back to news" uses inline onclick="renderNews()".
+  window.renderNews = function renderNews() {
     const filtered = currentFilter === 'All'
       ? allArticles
       : allArticles.filter(a => a.category === currentFilter);
@@ -269,7 +270,7 @@
 
     html += `<div style="font-size:12px;color:var(--muted);margin-top:48px;padding-top:24px;border-top:1px solid var(--line-light);">Last updated: ${window._newsUpdated || ''}</div>`;
     document.getElementById('news-content').innerHTML = html;
-  }
+  };
 
   fetch('news.json')
     .then(r => { if (!r.ok) throw new Error('Could not load news'); return r.json(); })
