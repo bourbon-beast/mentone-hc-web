@@ -70,15 +70,32 @@ Superseded note: an earlier version of this decision targeted the homepage, whic
 
 ---
 
-## Phase 0 — Go live (pre-launch blockers)
+## Phase 0 — Go live
 
-- [ ] Confirm all pages load without broken links or missing assets
-- [ ] Check fixtures data is current for 2026 season
-- [ ] Confirm registration links (Revolutionise) are correct and active
-- [ ] Review contact details are up to date on all pages
-- [ ] Test on mobile (nav, cards, fixtures table)
-- [ ] Set up domain / hosting / DNS
-- [ ] Smoke test partials.js nav injection on every page
+The site already runs on the live install; launch = remove the `/` → revolutioniseSPORT 301. Full plan agreed 2026-09-24 (vault: `Projects/Side Projects/Mentone Website.md`). Superseded items: DNS/hosting (same install, nothing to move), partials.js (replaced by theme template parts).
+
+**1. Pre-launch blockers**
+- [ ] Real news: 2–3 posts published; "Post #1" (4926) and the 6 demo drafts deleted — the homepage news grid reads the same query
+- [ ] `/resources/`: current Child Safe, Member Protection, constitution, code of conduct (old versions in `legacy-content/_attachments.json` — confirm current with secretary)
+- [ ] Register CTA decision (revolutioniseSPORT vs Majestri) applied consistently across section pages, `/new-players/`, homepage
+- [ ] Contact details swept against current committee; `hookin2hockey@` decision
+- [ ] Crawl clean (0 broken) + real-phone mobile pass
+- [ ] UpdraftPlus backup confirmed in Google Drive
+
+**2. Redirect map** — `docs/redirects.md` → `scripts/build_redirects.py` → paste into `.htaccess`; verify with `scripts/check_redirects.py`. Can go live before cutover.
+- [x] Map built (149 rules incl. flat-slug variants) — 2026-09-24
+- [ ] Steve pastes `export/htaccess-redirects.txt` into `public_html/.htaccess`
+- [ ] `check_redirects.py` all OK (only `/` destinations may show PRE-CUTOVER)
+
+**3. Cutover**
+- [ ] Fresh backup → remove `/` 301 → delete `/home-preview/` (5211) → rebuild with `--cutover` and re-paste
+- [ ] `robots.txt`: drop Attracta, point at `/wp-sitemap.xml`; disable users sitemap (theme v0.3.7); "Discourage search engines" off
+- [ ] Smoke test `/`, `check_redirects.py --cutover`, contact form, both register paths
+- [ ] Google Search Console: verify, submit sitemap, request indexing
+
+**4. Off-site cleanup** (committee; `docs/launch-register.md`) — RevSport, Majestri, TidyHQ, socials, directories, sponsors, internal templates/QR
+
+**5. Post-launch** (+1 wk, +1 mo) — GSC 404s → new redirect rows; re-crawl; prune legacy media (incl. 2017–18 selection-sheet PDFs with player names)
 
 ---
 

@@ -1,2 +1,3 @@
 .wp-auth
 _payload.json
+__pycache__/
