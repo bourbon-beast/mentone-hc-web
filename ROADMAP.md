@@ -75,7 +75,8 @@ Superseded note: an earlier version of this decision targeted the homepage, whic
 The site already runs on the live install; launch = remove the `/` → revolutioniseSPORT 301. Full plan agreed 2026-09-24 (vault: `Projects/Side Projects/Mentone Website.md`). Superseded items: DNS/hosting (same install, nothing to move), partials.js (replaced by theme template parts).
 
 **1. Pre-launch blockers**
-- [ ] Real news: 2–3 posts published; "Post #1" (4926) and the 6 demo drafts deleted — the homepage news grid reads the same query
+- [x] News hidden for launch (2026-09-24) — nav link, homepage "Club news" section, `/news/` page (5091, drafted; `page_for_posts` unset) and "Post #1" (drafted). `/news/` 301s to `/`. Footer link goes with theme v0.3.9
+- [ ] Steve: upload theme v0.3.9 (`theme/mentone-theme.zip`) — footer News link removed; also carries the unuploaded 0.3.7/0.3.8 seed-pattern changes
 - [ ] `/resources/`: current Child Safe, Member Protection, constitution, code of conduct (old versions in `legacy-content/_attachments.json` — confirm current with secretary)
 - [ ] Register CTA decision (revolutioniseSPORT vs Majestri) applied consistently across section pages, `/new-players/`, homepage
 - [ ] Contact details swept against current committee; `hookin2hockey@` decision

@@ -119,27 +119,30 @@ Status: **live-ready now** except rows marked *cutover* — those go in only whe
 
 ## News, media, events
 
+News is hidden (2026-09-24): /news/ and its posts are drafted, so these all point at the homepage or history. Repoint to /news/ if news comes back.
+
 | Old path | New path | Why |
 |---|---|---|
-| /home/mentone-in-the-news-2017/ | /news/ | |
-| /mentone-media-2018/ | /news/ | |
-| /hockey-photo-albums/ | /news/ | no gallery page yet — repoint to /gallery/ when built |
-| /hockey-photo-albums-juniors/ | /news/ | as above |
-| /videos-and-slideshows/ | /news/ | as above |
-| /mhc-golf-club/ | /news/ | social club item |
-| /calendar/ | /news/ | events now run through Majestri |
-| /club-calendar/ | /news/ | as above |
-| /mhc-club-calendar/ | /news/ | as above |
-| /events/ | /news/ | Events Manager removed 2026-07-06 |
+| /home/mentone-in-the-news-2017/ | /history/ | |
+| /mentone-media-2018/ | /history/ | |
+| /hockey-photo-albums/ | / | no gallery page yet — repoint to /gallery/ when built |
+| /hockey-photo-albums-juniors/ | / | as above |
+| /videos-and-slideshows/ | / | as above |
+| /mhc-golf-club/ | / | social club item |
+| /calendar/ | / | events now run through Majestri |
+| /club-calendar/ | / | as above |
+| /mhc-club-calendar/ | / | as above |
+| /events/ | / | Events Manager removed 2026-07-06 |
+| /news/ | / | news hidden 2026-09-24 (page 5091 drafted); still linked from the v0.3.6 footer until v0.3.9 is uploaded |
 
 ## Prefix rules (whole families)
 
 | Old path prefix | New path | Why |
 |---|---|---|
-| /events/ | /news/ | Events Manager sub-pages (categories, locations, bookings, individual events) |
+| /events/ | / | Events Manager sub-pages (categories, locations, bookings, individual events) |
 | /locations/ | /contact/ | Events Manager venue pages — ground details on /contact/ |
-| /home-and-away-mentone-v- | /news/ | 2017–18 match-report pages |
-| /mentone-v- | /news/ | 2018 finals match-report pages |
+| /home-and-away-mentone-v- | /history/ | 2017–18 match-report pages |
+| /mentone-v- | /history/ | 2018 finals match-report pages |
 | /membership-login/ | / | Simple Membership removed — no member login any more |
 
 ## Leftover utility pages

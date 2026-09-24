@@ -18,7 +18,6 @@
     ['masters.html', 'Masters'],
     ['new-players.html', 'New Players'],
     ['fixtures.html', 'Fixtures'],
-    ['news.html', 'News'],
     ['history/', 'Awards &amp; Records'],
     ['contact.html', 'Contact'],
   ];
@@ -129,7 +128,6 @@
             <li><a href="${rootHref('uniforms.html')}">Uniforms</a></li>
             <li><a href="${rootHref('history/')}">Awards &amp; Records</a></li>
             <li><a href="${rootHref('fixtures.html')}">Fixtures &amp; Results</a></li>
-            <li><a href="${rootHref('news.html')}">News</a></li>
             <li><a href="${rootHref('sponsors.html')}">Sponsors</a></li>
             <li><a href="${CLUB_REGISTRATIONS_URL}" target="_blank" rel="noopener noreferrer">Registration</a></li>
           </ul>
